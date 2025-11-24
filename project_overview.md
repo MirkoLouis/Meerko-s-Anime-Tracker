@@ -29,6 +29,15 @@ The application is built on a classic client-server architecture with a clear se
     - **Data Persistence:** Stores all application data, including user accounts, anime information, studio details, tags, and user watchlists.
     - **Data Integrity:** Enforces data integrity through a structured schema with relationships between tables.
 
+### 2.4. Database Seeding
+- **Technology:** Python with the `requests` and `tqdm` libraries.
+- **Responsibilities:**
+    - **Data Fetching:** The Python scripts in the `auto insert to db` directory are responsible for fetching large amounts of data from the public Jikan API.
+    - **Data Processing and Sanitization:** The scripts process the raw API data, sanitize it to prevent SQL injection and other errors, and format it into SQL `INSERT` statements.
+    - **SQL Generation:** The scripts generate `.sql` files containing the `INSERT` statements for the `Anime`, `Studio`, `Tags`, and `Anime_Tags` tables. This allows for a large, consistent dataset to be easily imported into the MySQL database.
+    - **Map Creation:** Utility scripts are included to generate Python dictionaries that map studio and tag names to their respective primary keys in the database. This is useful for the main data insertion script (`autoinsert2.py`).
+    - **Sample Data Generation:** The `randomwatchlist.py` script generates random watchlist data for users, which is useful for testing and demonstration purposes.
+
 ## 3. Key Architectural Decisions
 
 - **RESTful API:** The choice of a RESTful API on the backend allows for a decoupled architecture. This makes the application more scalable and easier to maintain. It also opens up the possibility of creating other clients (e.g., a mobile app) that can consume the same API.

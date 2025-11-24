@@ -59,6 +59,17 @@ This data flow allows for a responsive and interactive user experience, as the p
 -   **Authentication:** JSON Web Tokens (JWT), bcrypt.js
 -   **Other Libraries:** `mysql2`, `dotenv`, `cookie-parser`, and others.
 
+## Database Seeding Scripts
+
+The `auto insert to db` directory contains several Python scripts to automatically populate the database with data from the Jikan API.
+
+-   **`autoinsert2.py`:** Fetches anime data from the Jikan API, processes it, and generates SQL insert statements for the `Anime` and `Anime_Tags` tables.
+-   **`randomwatchlist.py`:** Generates random watchlist entries for existing users to populate the `Watchlist` table with sample data.
+-   **`studiocatcher.py`:** Fetches anime studio data, calculates a rating based on the frequency of their productions, and generates SQL insert statements for the `Studio` table.
+-   **`studiomapcreator.py`:** A utility script that parses the generated `studio_inserts.sql` file to create a Python dictionary (`studio_map`) that maps studio names to their corresponding `StudioID`.
+-   **`tagcatcher.py`:** Fetches all available anime genres and tags from the Jikan API and generates SQL insert statements for the `Tags` table.
+-   **`tagmapcreator.py`:** A utility script that parses the generated `insert_tags.sql` file to create a Python dictionary (`tag_map`) that maps tag names to their corresponding `TagID`.
+
 ## Setup and Installation
 
 1.  **Clone the repository:**
