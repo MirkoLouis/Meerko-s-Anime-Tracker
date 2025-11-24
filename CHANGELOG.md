@@ -18,6 +18,7 @@
 - **DOCS:** Shortened the project description in `README.md` to a maximum of 350 characters.
 - **BUILD:** Created `.gitignore` file to exclude unnecessary files and directories from version control.
 - **DOCS:** Updated `README.md` and `project_overview.md` to include information about the database seeding scripts.
+- **DOCS:** Updated `README.md` to include a detailed "Database Setup" section with multiple options for setting up the database.
 - **DOCS:** Added comments to explain each code block in `auto insert to db/autoinsert2.py`.
 - **DOCS:** Added comments to explain each code block in `auto insert to db/randomwatchlist.py`.
 - **DOCS:** Added comments to explain each code block in `auto insert to db/studiocatcher.py`.

@@ -59,17 +59,6 @@ This data flow allows for a responsive and interactive user experience, as the p
 -   **Authentication:** JSON Web Tokens (JWT), bcrypt.js
 -   **Other Libraries:** `mysql2`, `dotenv`, `cookie-parser`, and others.
 
-## Database Seeding Scripts
-
-The `auto insert to db` directory contains several Python scripts to automatically populate the database with data from the Jikan API.
-
--   **`autoinsert2.py`:** Fetches anime data from the Jikan API, processes it, and generates SQL insert statements for the `Anime` and `Anime_Tags` tables.
--   **`randomwatchlist.py`:** Generates random watchlist entries for existing users to populate the `Watchlist` table with sample data.
--   **`studiocatcher.py`:** Fetches anime studio data, calculates a rating based on the frequency of their productions, and generates SQL insert statements for the `Studio` table.
--   **`studiomapcreator.py`:** A utility script that parses the generated `studio_inserts.sql` file to create a Python dictionary (`studio_map`) that maps studio names to their corresponding `StudioID`.
--   **`tagcatcher.py`:** Fetches all available anime genres and tags from the Jikan API and generates SQL insert statements for the `Tags` table.
--   **`tagmapcreator.py`:** A utility script that parses the generated `insert_tags.sql` file to create a Python dictionary (`tag_map`) that maps tag names to their corresponding `TagID`.
-
 ## Setup and Installation
 
 1.  **Clone the repository:**
@@ -91,7 +80,53 @@ The `auto insert to db` directory contains several Python scripts to automatical
     JWT_EXPIRES_IN=90d
     JWT_COOKIE_EXPIRES=90
     ```
-4.  **Start the server:**
+4.  **Set up the database:**
+    You have three options to set up the database:
+
+    ### Option 1: Quick Setup (Recommended)
+    This option uses a database dump to create the schema and populate it with approximately 1,000 anime entries. This is the fastest way to get the application running with a good amount of data.
+
+    To restore the database from the dump file, run the following command in your terminal:
+    ```bash
+    mysql -u your_database_user -p your_database_name < "auto insert to db/Dump20250513.sql"
+    ```
+    You will be prompted for your database password.
+
+    ### Option 2: Presentation Setup (Large Dataset)
+    This option provides a much larger dataset of over 14,000 anime entries, which was used for the project presentation. This is ideal for a more comprehensive demonstration of the application.
+
+    1.  **Create the schema and seed initial data:**
+        First, run the same command as in Option 1 to create the database structure and seed essential data like users, studios, and tags.
+        ```bash
+        mysql -u your_database_user -p your_database_name < "auto insert to db/Dump20250513.sql"
+        ```
+    2.  **Clear existing anime data (Optional but Recommended):**
+        To avoid data conflicts, it's recommended to clear the `anime`, `anime_tags`, and `watchlist` tables before inserting the larger dataset.
+        ```bash
+        mysql -u your_database_user -p your_database_name -e "TRUNCATE TABLE watchlist; TRUNCATE TABLE anime_tags; TRUNCATE TABLE anime;"
+        ```
+    3.  **Insert the large anime dataset:**
+        Run the following command to populate the `anime` table with over 14,000 entries.
+        ```bash
+        mysql -u your_database_user -p your_database_name < "auto insert to db/anime_insert_14503.sql"
+        ```
+        **Note:** This script only populates the `anime` table. For fully consistent data (e.g., tags for all anime), you may need to run additional seeding scripts as described in Option 3.
+
+    ### Option 3: Full Data Seeding (Developer)
+    This option is for developers who want to generate the entire dataset from scratch using the Python seeding scripts. This gives you the most control over the data but is also the most complex method.
+
+    The `auto insert to db` directory contains several Python scripts to automatically populate the database with data from the Jikan API.
+
+    -   **`studiocatcher.py`:** Fetches anime studio data, calculates a rating based on the frequency of their productions, and generates SQL insert statements for the `Studio` table.
+    -   **`tagcatcher.py`:** Fetches all available anime genres and tags from the Jikan API and generates SQL insert statements for the `Tags` table.
+    -   **`autoinsert2.py`:** Fetches anime data from the Jikan API, processes it, and generates SQL insert statements for the `Anime` and `Anime_Tags` tables.
+    -   **`randomwatchlist.py`:** Generates random watchlist entries for existing users to populate the `Watchlist` table with sample data.
+    -   **`studiomapcreator.py`:** A utility script that parses the generated `studio_inserts.sql` file to create a Python dictionary (`studio_map`) that maps studio names to their corresponding `StudioID`.
+    -   **`tagmapcreator.py`:** A utility script that parses the generated `insert_tags.sql` file to create a Python dictionary (`tag_map`) that maps tag names to their corresponding `TagID`.
+
+    To use these scripts, you will need a Python environment with the required dependencies installed. Please inspect the scripts for details on their usage and dependencies.
+
+5.  **Start the server:**
     ```bash
     npm start
     ```
