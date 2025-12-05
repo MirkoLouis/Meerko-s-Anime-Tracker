@@ -22,6 +22,11 @@ app.use(compression());
 // Log HTTP requests to the console
 app.use(morgan('dev')); // or 'combined' for even more detailed logs
 
+app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "connect-src 'self' http://localhost:3000");
+    next();
+});
+
 // Custom middleware for logging incoming requests with a timestamp
 app.use((req, res, next) => {
     const time = new Date().toISOString();
