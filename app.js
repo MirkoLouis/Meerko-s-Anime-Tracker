@@ -323,7 +323,7 @@ app.get('/anime/animespotlight-animes', async (req, res) => {
         JOIN Studio s ON a.StudioID = s.StudioID
         JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
         JOIN Tags t ON at.TagID = t.TagID
-        WHERE a.rating = '10'
+        WHERE a.rating >= 10
         GROUP BY a.AnimeID
         ORDER BY a.title ASC
         LIMIT 10
