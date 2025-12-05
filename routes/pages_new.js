@@ -7,6 +7,7 @@ router.get('/', (req, res) => {
     res.render('index');
 });
 
+// Route to render the anime details page.
 router.get('/anime/:animeId', (req, res) => {
     res.render('anime_details');
 });

@@ -578,6 +578,35 @@ app.get('/anime/mostwatchlist-animes', async (req, res) => {
     }
 });
 
+app.get('/focusanime/:animeId', async (req, res) => {
+    const animeId = req.params.animeId;
+    const query = `
+        SELECT
+            a.AnimeID, a.title, a.type, a.episodes, a.status, a.airing_start,
+            a.airing_end, a.rating, a.synopsis, a.image_url,
+            s.studio_name, s.rating AS studio_rating,
+            GROUP_CONCAT(DISTINCT t.tag ORDER BY t.tag SEPARATOR ', ') AS genres
+        FROM Anime a
+        JOIN Studio s ON a.StudioID = s.StudioID
+        LEFT JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
+        LEFT JOIN Tags t ON at.TagID = t.TagID
+        WHERE a.AnimeID = ?
+        GROUP BY a.AnimeID;
+    `;
+
+    try {
+        const [results] = await db.query(query, [animeId]);
+        if (results.length > 0) {
+            res.json(results[0]);
+        } else {
+            res.status(404).json({ error: 'Anime not found' });
+        }
+    } catch (err) {
+        console.error('Error fetching anime details:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 // API Endpoint for User-Specific Spotlight Recommendations
 // Provides personalized anime recommendations for the logged-in user based on their watchlist and tag preferences.
 // Includes fallback logic for new users or when recommendations cannot be generated.

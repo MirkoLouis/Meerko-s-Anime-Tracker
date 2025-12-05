@@ -89,6 +89,11 @@ function updateSpotlight(anime) {
             'Unknown start date';
 
         const addToWatchlistBtn = document.getElementById('add-to-watchlist-btn');
+        const viewDetailsBtn = document.getElementById('view-details-btn');
+
+        if (viewDetailsBtn) {
+            viewDetailsBtn.href = `/anime/${anime.AnimeID}`;
+        }
 
         if (addToWatchlistBtn) {
             // Remove previous click listener just in case
@@ -243,6 +248,12 @@ function updateDashboardSpotlight(anime) {
         document.querySelector('.spotlight-content p:nth-of-type(2)').textContent = anime.synopsis || 'No synopsis available.';
 
         const addToWatchlistBtn = document.getElementById('add-to-watchlist-btn');
+        const viewDetailsBtn = document.getElementById('view-details-btn');
+
+        if (viewDetailsBtn) {
+            viewDetailsBtn.href = `/anime/${anime.AnimeID}`;
+        }
+        
         if (addToWatchlistBtn) {
             addToWatchlistBtn.replaceWith(addToWatchlistBtn.cloneNode(true));
             const freshBtn = document.getElementById('add-to-watchlist-btn');
@@ -331,6 +342,7 @@ function fetchNewAnimes() {
                                             <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4z"/>
                                         </svg> Add to Watchlist
                                     </a>
+                                    <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2">View Details</a>
                                 </div>
                             </div>
                         </div>`;
@@ -418,6 +430,7 @@ function fetchUpcomingAnimes() {
                                             <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4z"/>
                                         </svg> Add to Watchlist
                                     </a>
+                                    <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2">View Details</a>
                                 </div>
                             </div>
                         </div>`;
@@ -475,6 +488,7 @@ function fetchRecommendedAnimes() {
                                 <a class="btn btn-primary add-watchlist-button-hover btn-radius mr-2" onclick="addToWatchlist(${anime.AnimeID})"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-square-fill align-middle mb-1" viewBox="0 0 16 16">
                                     <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4z"/>
                                     </svg> Add to Watchlist</a>
+                                <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2">View Details</a>
                             </div>
                         </div>
                     </div>
@@ -546,6 +560,7 @@ function fetchMostwatchlistAnimes() {
                                                 <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4z"/>
                                             </svg> Add to Watchlist
                                         </a>
+                                        <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2">View Details</a>
                                     </div>
                                 </div>
                             `;
@@ -595,6 +610,7 @@ function fetchRandomAnimes() {
                                 <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4z"/>
                             </svg> Add to Watchlist
                         </a>
+                        <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2">View Details</a>
                     </div>
                 `;
                 randomAnimesContainer.appendChild(animeCard);
@@ -706,6 +722,7 @@ function renderWatchlist(page = 1) {
                             <button class="btn btn-outline-danger btn-sm" onclick="removeFromWatchlist(${anime.AnimeID})"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill mb-1" viewBox="0 0 16 16">
                                 <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
                             </svg> Remove</button>
+                            <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-sm">View Details</a>
                             <span class="badge bg-secondary">Added on: ${new Date(anime.date_added).toLocaleString()}</span>
                             <span class="badge bg-secondary">Last updated: ${new Date(anime.last_updated).toLocaleString()}</span>
                         </div>
@@ -782,6 +799,7 @@ function renderCompletedWatchlist(page = 1) {
                             <button class="btn btn-outline-danger btn-sm" onclick="removeFromWatchlist(${anime.AnimeID})"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill mb-1" viewBox="0 0 16 16">
                                 <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
                             </svg> Remove</button>
+                            <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-sm">View Details</a>
                             <span class="badge bg-secondary">Completed: ${new Date(anime.last_updated).toLocaleString()}</span>
                         </div>
                     </div>
@@ -1144,6 +1162,7 @@ function handleSearch(event, page = 1) {
                                                     <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4z"/>
                                                 </svg> Add to Watchlist
                                             </a>
+                                            <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2">View Details</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1241,3 +1260,37 @@ function renderPagination(total, currentPage, query) {
     document.getElementById('pagination-top').innerHTML = paginationHTML.join('');
     document.getElementById('pagination-bottom').innerHTML = paginationHTML.join('');
 }
+
+function fetchAnimeDetails() {
+    const animeId = window.location.pathname.split('/').pop();
+    if (animeId) {
+        fetch(`/focusanime/${animeId}`)
+            .then(response => response.json())
+            .then(anime => {
+                if (anime.error) {
+                    console.error(anime.error);
+                } else {
+                    document.querySelector('.col-md-4 img').src = anime.image_url;
+                    document.querySelector('.col-md-4 img').alt = anime.title;
+                    document.querySelector('.col-md-8 h1').textContent = anime.title;
+                    document.querySelector('.col-md-8 p:nth-of-type(1)').innerHTML = `<strong>Type:</strong> ${anime.type}`;
+                    document.querySelector('.col-md-8 p:nth-of-type(2)').innerHTML = `<strong>Episodes:</strong> ${anime.episodes}`;
+                    document.querySelector('.col-md-8 p:nth-of-type(3)').innerHTML = `<strong>Status:</strong> ${anime.status}`;
+                    document.querySelector('.col-md-8 p:nth-of-type(4)').innerHTML = `<strong>Airing Start:</strong> ${anime.airing_start}`;
+                    document.querySelector('.col-md-8 p:nth-of-type(5)').innerHTML = `<strong>Airing End:</strong> ${anime.airing_end}`;
+                    document.querySelector('.col-md-8 p:nth-of-type(6)').innerHTML = `<strong>Rating:</strong> ${anime.rating}`;
+                    document.querySelector('.col-md-8 p:nth-of-type(7)').innerHTML = `<strong>Studio:</strong> ${anime.studio_name}`;
+                    document.querySelector('.col-md-8 p:nth-of-type(8)').innerHTML = `<strong>Genres:</strong> ${anime.genres}`;
+                    document.querySelector('.col-md-8 p:nth-of-type(10)').textContent = anime.synopsis;
+                    document.querySelector('.btn-primary').setAttribute('onclick', `addToWatchlist(${anime.AnimeID})`);
+                }
+            })
+            .catch(error => console.error('Error fetching anime details:', error));
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.includes('/anime/')) {
+        fetchAnimeDetails();
+    }
+});
