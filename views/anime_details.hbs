@@ -60,21 +60,21 @@
     <main class="container my-5">
         <div class="row">
             <div class="col-md-4">
-                <img src="{{anime.image_url}}" alt="{{anime.title}}" class="img-fluid rounded">
+                <img id="anime-image" src="" alt="" class="img-fluid rounded" style="height: 100%;">
             </div>
             <div class="col-md-8">
-                <h1>{{anime.title}}</h1>
-                <p><strong>Type:</strong> {{anime.type}}</p>
-                <p><strong>Episodes:</strong> {{anime.episodes}}</p>
-                <p><strong>Status:</strong> {{anime.status}}</p>
-                <p><strong>Airing Start:</strong> {{anime.airing_start}}</p>
-                <p><strong>Airing End:</strong> {{anime.airing_end}}</p>
-                <p><strong>Rating:</strong> {{anime.rating}}</p>
-                <p><strong>Studio:</strong> {{anime.studio_name}}</p>
-                <p><strong>Genres:</strong> {{anime.genres}}</p>
+                <h1 id="anime-title"></h1>
+                <p><strong>Type:</strong> <span id="anime-type"></span></p>
+                <p><strong>Episodes:</strong> <span id="anime-episodes"></span></p>
+                <p><strong>Status:</strong> <span id="anime-status"></span></p>
+                <p><strong>Airing Start:</strong> <span id="anime-airing-start"></span></p>
+                <p><strong>Airing End:</strong> <span id="anime-airing-end"></span></p>
+                <p><strong>Rating:</strong> <span id="anime-rating"></span></p>
+                <p><strong>Studio:</strong> <span id="anime-studio-name"></span></p>
+                <p><strong>Genres:</strong> <span id="anime-genres"></span></p>
                 <p><strong>Synopsis:</strong></p>
-                <p>{{anime.synopsis}}</p>
-                <button class="btn btn-primary" onclick="addToWatchlist({{anime.AnimeID}})">Add to Watchlist</button>
+                <p id="anime-synopsis"></p>
+                <button id="add-to-watchlist-btn" class="btn btn-primary">Add to Watchlist</button>
             </div>
         </div>
 

@@ -23,7 +23,7 @@ app.use(compression());
 app.use(morgan('dev')); // or 'combined' for even more detailed logs
 
 app.use((req, res, next) => {
-    res.setHeader("Content-Security-Policy", "connect-src 'self' http://localhost:3000");
+    res.setHeader("Content-Security-Policy", "connect-src 'self' http://localhost:3000 https://cdn.jsdelivr.net");
     next();
 });
 
@@ -211,6 +211,37 @@ app.get('/', (req, res) => {
     });
     console.log('JWT on home page:', req.jwt);
 });
+
+// Focus Anime API Route
+app.get('/focusanime/:animeId', async (req, res) => {
+    const animeId = req.params.animeId;
+    const query = `
+        SELECT
+            a.AnimeID, a.title, a.type, a.episodes, a.status, a.airing_start,
+            a.airing_end, a.rating, a.synopsis, a.image_url,
+            s.studio_name, s.rating AS studio_rating,
+            GROUP_CONCAT(DISTINCT t.tag ORDER BY t.tag SEPARATOR ', ') AS genres
+        FROM Anime a
+        JOIN Studio s ON a.StudioID = s.StudioID
+        LEFT JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
+        LEFT JOIN Tags t ON at.TagID = t.TagID
+        WHERE a.AnimeID = ?;
+    `;
+
+    try {
+        const [results] = await db.query(query, [animeId]);
+        console.log('Query results:', results);
+        if (results.length > 0) {
+            res.json(results[0]);
+        } else {
+            res.status(404).json({ error: 'Anime not found' });
+        }
+    } catch (err) {
+        console.error('Error fetching anime details:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 
 // Debugger for routes
 //app.use((req, res, next) => {
@@ -583,33 +614,11 @@ app.get('/anime/mostwatchlist-animes', async (req, res) => {
     }
 });
 
-app.get('/focusanime/:animeId', async (req, res) => {
-    const animeId = req.params.animeId;
-    const query = `
-        SELECT
-            a.AnimeID, a.title, a.type, a.episodes, a.status, a.airing_start,
-            a.airing_end, a.rating, a.synopsis, a.image_url,
-            s.studio_name, s.rating AS studio_rating,
-            GROUP_CONCAT(DISTINCT t.tag ORDER BY t.tag SEPARATOR ', ') AS genres
-        FROM Anime a
-        JOIN Studio s ON a.StudioID = s.StudioID
-        LEFT JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
-        LEFT JOIN Tags t ON at.TagID = t.TagID
-        WHERE a.AnimeID = ?
-        GROUP BY a.AnimeID;
-    `;
-
-    try {
-        const [results] = await db.query(query, [animeId]);
-        if (results.length > 0) {
-            res.json(results[0]);
-        } else {
-            res.status(404).json({ error: 'Anime not found' });
-        }
-    } catch (err) {
-        console.error('Error fetching anime details:', err);
-        res.status(500).json({ error: 'Database error' });
-    }
+// Anime Details Page Route
+app.get('/anime/:animeId', (req, res) => {
+    res.render('anime_details', {
+        user: req.jwt || null
+    });
 });
 
 // API Endpoint for User-Specific Spotlight Recommendations

@@ -2,13 +2,23 @@
 // Event listener that fires when the DOM is fully loaded.
 // It initializes various anime sections and functionalities on the page.
 document.addEventListener('DOMContentLoaded', () => {
-    fetchAnimeSpotlights();
-    populateDashboardSpotlight();
-    fetchNewAnimes();
-    fetchUpcomingAnimes();
-    fetchRecommendedAnimes();
-    fetchMostwatchlistAnimes();
-    fetchRandomAnimes();
+    if (window.location.pathname.includes('/anime/')) {
+        fetchAnimeDetails();
+    } else if (window.location.pathname.includes('/dashboard')) {
+        populateDashboardSpotlight();
+        fetchNewAnimes();
+        fetchUpcomingAnimes();
+        fetchRecommendedAnimes();
+        fetchMostwatchlistAnimes();
+        fetchRandomAnimes();
+    } else {
+        fetchAnimeSpotlights();
+        fetchNewAnimes();
+        fetchUpcomingAnimes();
+        fetchRecommendedAnimes();
+        fetchMostwatchlistAnimes();
+        fetchRandomAnimes();
+    }
     console.log("DOM Fully Loaded");
 });
 
@@ -28,6 +38,46 @@ function fetchAllTags() {
 
 fetchAllTags(); // Call it once on initial load
 
+async function fetchAnimeDetails() {
+    const animeId = window.location.pathname.split('/').pop();
+    if (!animeId) {
+        console.error('Anime ID not found in URL.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/focusanime/${animeId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const anime = await response.json();
+
+        if (anime) {
+            document.getElementById('anime-image').src = anime.image_url || 'Anime Image';
+            document.getElementById('anime-title').textContent = anime.title || 'Unknown Title';
+            document.getElementById('anime-type').textContent = anime.type || 'N/A';
+            document.getElementById('anime-episodes').textContent = anime.episodes || 'N/A';
+            document.getElementById('anime-status').textContent = anime.status || 'N/A';
+            document.getElementById('anime-airing-start').textContent = anime.airing_start ? new Date(anime.airing_start).toLocaleDateString() : 'N/A';
+            document.getElementById('anime-airing-end').textContent = anime.airing_end ? new Date(anime.airing_end).toLocaleDateString() : 'N/A';
+            document.getElementById('anime-rating').textContent = anime.rating || 'N/A';
+            document.getElementById('anime-studio-name').textContent = anime.studio_name || 'N/A';
+            document.getElementById('anime-genres').textContent = anime.genres || 'N/A';
+            document.getElementById('anime-synopsis').textContent = anime.synopsis || 'No synopsis available.';
+            
+            const addToWatchlistBtn = document.getElementById('add-to-watchlist-btn');
+            if (addToWatchlistBtn) {
+                addToWatchlistBtn.onclick = () => addToWatchlist(anime.AnimeID);
+            }
+
+            console.log('Anime details populated successfully.');
+        } else {
+            console.error('No anime data received.');
+        }
+    } catch (error) {
+        console.error('Error fetching anime details:', error);
+    }
+}
 // Anime Spotlight
 
 // Function to fetch anime spotlights data
@@ -1260,37 +1310,3 @@ function renderPagination(total, currentPage, query) {
     document.getElementById('pagination-top').innerHTML = paginationHTML.join('');
     document.getElementById('pagination-bottom').innerHTML = paginationHTML.join('');
 }
-
-function fetchAnimeDetails() {
-    const animeId = window.location.pathname.split('/').pop();
-    if (animeId) {
-        fetch(`/focusanime/${animeId}`)
-            .then(response => response.json())
-            .then(anime => {
-                if (anime.error) {
-                    console.error(anime.error);
-                } else {
-                    document.querySelector('.col-md-4 img').src = anime.image_url;
-                    document.querySelector('.col-md-4 img').alt = anime.title;
-                    document.querySelector('.col-md-8 h1').textContent = anime.title;
-                    document.querySelector('.col-md-8 p:nth-of-type(1)').innerHTML = `<strong>Type:</strong> ${anime.type}`;
-                    document.querySelector('.col-md-8 p:nth-of-type(2)').innerHTML = `<strong>Episodes:</strong> ${anime.episodes}`;
-                    document.querySelector('.col-md-8 p:nth-of-type(3)').innerHTML = `<strong>Status:</strong> ${anime.status}`;
-                    document.querySelector('.col-md-8 p:nth-of-type(4)').innerHTML = `<strong>Airing Start:</strong> ${anime.airing_start}`;
-                    document.querySelector('.col-md-8 p:nth-of-type(5)').innerHTML = `<strong>Airing End:</strong> ${anime.airing_end}`;
-                    document.querySelector('.col-md-8 p:nth-of-type(6)').innerHTML = `<strong>Rating:</strong> ${anime.rating}`;
-                    document.querySelector('.col-md-8 p:nth-of-type(7)').innerHTML = `<strong>Studio:</strong> ${anime.studio_name}`;
-                    document.querySelector('.col-md-8 p:nth-of-type(8)').innerHTML = `<strong>Genres:</strong> ${anime.genres}`;
-                    document.querySelector('.col-md-8 p:nth-of-type(10)').textContent = anime.synopsis;
-                    document.querySelector('.btn-primary').setAttribute('onclick', `addToWatchlist(${anime.AnimeID})`);
-                }
-            })
-            .catch(error => console.error('Error fetching anime details:', error));
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('/anime/')) {
-        fetchAnimeDetails();
-    }
-});
