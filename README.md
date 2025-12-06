@@ -49,8 +49,8 @@ The application follows a modern client-server architecture, with a clear separa
 
 ### Frontend (Website)
 1.  **Initial Page Load:** When a user visits the website, the Node.js server renders the initial HTML structure using the Handlebars templating engine.
-2.  **Client-Side JavaScript:** The `public/animefetcher.js` script is loaded on the client-side. This script is responsible for all the dynamic functionality of the application.
-3.  **AJAX Calls:** `animefetcher.js` makes asynchronous HTTP requests (AJAX calls) to the backend API endpoints to fetch anime and user data.
+2.  **Client-Side JavaScript:** Multiple JavaScript files (`main.js`, `carousels.js`, `search.js`, etc.) are loaded on the client-side. These scripts are responsible for the dynamic functionality of the application.
+3.  **AJAX Calls:** These scripts make asynchronous HTTP requests (AJAX calls) to the backend API endpoints to fetch anime and user data.
 4.  **Dynamic Content Rendering:** Once the data is received from the backend, the JavaScript code dynamically generates HTML content (like anime cards, carousels, and watchlist items) and injects it into the DOM.
 5.  **User Interaction:** User actions, such as searching for an anime, adding an item to the watchlist, or changing a status, trigger new AJAX calls to the backend. The backend processes the request, updates the database if necessary, and the frontend updates the UI to reflect the changes.
 

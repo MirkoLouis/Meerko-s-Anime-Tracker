@@ -61,3 +61,30 @@
 - **DOCS:** Added a note to `README.md` advising users to delete previously generated SQL and map files before running Python data seeding scripts to avoid complications.
 - **FEAT:** Created `randomcomments.py` to generate random comments for a subset of animes, and updated it to generate 500 unique comments spread across 500 animes.
 - **DOCS:** Updated `README.md` and `project_overview.md` to include information about the `randomcomments.py` script and the `insert_comments.sql` file.
+
+## 2025-12-06
+
+- **FIX:** Corrected a `ReferenceError` in `public/js/carousels.js` that was introduced during a previous refactoring, ensuring that dynamically created anime cards are rendered correctly.
+- **FIX:** Prevented a `401 Unauthorized` error on the dashboard page for unauthenticated users by adding a check before fetching personalized spotlight data.
+- **PERF:** Corrected the lazy loading implementation for images in all carousels and grids. The `src` attribute was being set incorrectly, causing images to load immediately instead of when they become visible. This improves initial page load performance and reduces unnecessary network requests.
+- **DOCS:** Updated `README.md` to reflect the refactored and modularized client-side JavaScript file structure.
+- **REFACTOR:** Extracted database connection logic from `app.js` into a new centralized configuration file: `config/database.js`. This improves separation of concerns and maintainability.
+- **REFACTOR:** Created a new `services` directory and a `services/commentService.js` file. Moved the database query logic for fetching comments from `app.js` into `commentService.js`. The `GET /api/anime/:animeId/comments` endpoint in `app.js` now uses this new service. This is the first step towards a more modular architecture.
+- **SECURITY:** Refactored all dynamic content rendering in `public/animefetcher.js` to prevent Cross-Site Scripting (XSS) vulnerabilities. Replaced all instances of `.innerHTML` with secure DOM creation methods (`document.createElement` and `.textContent`). This includes:
+    - Comment sections (`fetchAndRenderComments`).
+    - New, Upcoming, Recommended, Most Watchlisted, and Random anime carousels/grids.
+    - Watchlist and Completed Watchlist views.
+    - Search results view.
+- **REFACTOR:** Moved all anime-related routes from `app.js` to a dedicated `routes/anime.js` file and their corresponding logic to `controllers/animeController.js`. This significantly cleans up `app.js` and improves the modularity of the application.
+- **REFACTOR:** Moved all user-specific and comment-related routes from `app.js` to dedicated `routes/user.js` and `routes/comment.js` files, with their logic moved to `controllers/userController.js` and `controllers/commentController.js` respectively. The `app.js` file is now significantly smaller and only handles middleware and route registration.
+- **PERFORMANCE:** Created `add_indexes.sql` to add database indexes to frequently queried columns, improving overall application performance.
+- **REFACTOR:** Removed duplicate database connection logic from `controllers/auth.js` and replaced it with a reference to the central `config/database.js` module.
+- **REFACTOR:** Split the monolithic `public/animefetcher.js` into smaller, more manageable modules:
+    - `public/js/comments.js`: Handles all comment-related functionality.
+    - `public/js/watchlist.js`: Handles all watchlist-related functionality.
+    - `public/js/search.js`: Handles all search-related functionality.
+    - `public/js/carousels.js`: Handles all carousel and spotlight functionality.
+    - `public/js/utils.js`: Contains utility functions like `showAlert`.
+- **REFACTOR:** Updated `anime_details.hbs`, `dashboard.hbs`, `index.hbs`, and `search.hbs` to load the new JavaScript modules.
+- **REFACTOR:** Completed the frontend refactoring by moving the main `DOMContentLoaded` event listener to `public/js/main.js` and removing the now-obsolete `public/animefetcher.js` file. All pages now load the new, modular JavaScript files.
+- **SECURITY:** Ran `npm audit fix` to patch 6 vulnerabilities (4 low, 1 moderate, 1 high) in project dependencies.

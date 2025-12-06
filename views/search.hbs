@@ -22,39 +22,47 @@
 <body>
     <!-- Page title for the search results page. -->
     <h1>Search Results</h1>
-    <!-- Input field for users to refine or perform a new search. -->
-    <input type="text" id="liveSearchInput" placeholder="Search again..." value="{{query}}">
+    <!-- Search Form -->
+    <form id="search-form" class="d-inline-flex justify-content-center align-items-center w-50" role="search" onsubmit="handleSearch(event)">
+        <input class="form-control me-2" type="search" placeholder="Search anime..." aria-label="Search" id="search-input">
+        <button class="btn btn-warning" type="submit">Search</button>
+    </form>
 
-    <!-- Container for displaying anime search results in a grid format. -->
-    <div id="animeList" class="row row-cols-1 row-cols-md-5 g-4">Loading...</div>
-    
-    <!-- Client-side JavaScript for fetching and displaying anime search results dynamically.
-    It fetches data based on the search query and updates the anime grid. -->
-    <script>
-        const input = document.getElementById('liveSearchInput');
-        const list = document.getElementById('animeList');
+    <!-- Search Results Section -->
+    <section id="search-results-section" style="display: none;">
+        <div id="search-results-container" class="container my-5" style="display: none;">
+            <h2>Search Results</h2>
 
-        async function fetchAndDisplay(query) {
-            const res = await fetch(`/api/anime?q=${encodeURIComponent(query)}`);
-            const animes = await res.json();
+            <!-- Filter dropdown container -->
+            <div id="filter-row" class="row mb-4"></div>
 
-            list.innerHTML = animes.map(anime => `
-            <div class="anime-card">
-            <img src="${anime.image_url}" class="card-img-top" alt="${anime.title}">
-                <h5>${anime.title}</h5>
-                <p>Type: ${anime.type || 'No anime type'}</p>
-                <p>Episodes: ${anime.episodes || 'No description'}</p>
-                <p>Rating: ${anime.rating || 'No rating'}</p>
+            <!-- Selected tags container placed outside of the search results container -->
+            <div id="selected-tags-container">
+                <!-- Tags will appear here -->
             </div>
-            `).join('');
-        }
 
-        // Initial load
-        fetchAndDisplay(input.value);
+            <div id="pagination-top"></div>
+            <div id="search-results" class="row g-3">
+                <!-- Search results will be injected here -->
+            </div>
+            <div id="pagination-bottom" style="padding-top: 25px;"></div>
+        </div>
+    </section>
 
-        // Live filter as you type
-        input.addEventListener('input', () => {
-            fetchAndDisplay(input.value);
+    <script src="/js/utils.js"></script>
+    <script src="/js/search.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get query from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+
+            // Set input value and trigger search
+            const searchInput = document.getElementById('search-input');
+            if (searchInput && query) {
+                searchInput.value = query;
+            }
+            handleSearch(null, 1);
         });
     </script>
 </body>

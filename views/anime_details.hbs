@@ -129,7 +129,9 @@
     <script>
         window.currentUser = {{#if user}}JSON.parse('{{{json user}}}'){{else}}null{{/if}};
     </script>
-    <script src="/animefetcher.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/comments.js"></script>
+    <script src="/js/main.js"></script>
     <!-- Script to toggle between light and dark themes, saving the preference to local storage. -->
     <script>
         const toggleBtn = document.getElementById('theme-toggle');

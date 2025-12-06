@@ -12,7 +12,8 @@ The application is built on a classic client-server architecture with a clear se
 - **Technology Stack:** Node.js with the Express.js framework.
 - **Responsibilities:**
     - **API Server:** Exposes a RESTful API to handle all data-related operations, including CRUD operations for comments.
-    - **Database Interaction:** Communicates with the MySQL database to store and retrieve data.
+    - **Service Layer:** Contains business logic and interacts with the database (e.g., `services/commentService.js`).
+    - **Database Interaction:** Centralized database connection and pooling managed in `config/database.js`. Services communicate with the MySQL database to store and retrieve data.
     - **Authentication & Authorization:** Manages user authentication and authorization using JSON Web Tokens (JWT). Includes middleware to protect routes and implement Role-Based Access Control (e.g., ensuring only admins can delete comments).
     - **Routing:** Defines the application's routes and maps them to the appropriate controller logic.
 
@@ -50,7 +51,7 @@ The application is built on a classic client-server architecture with a clear se
 - **RESTful API:** The choice of a RESTful API on the backend allows for a decoupled architecture. This makes the application more scalable and easier to maintain. It also opens up the possibility of creating other clients (e.g., a mobile app) that can consume the same API.
 - **JWT for Authentication:** Using JWTs for authentication is a modern and secure approach. It allows for stateless authentication, where the server does not need to store session information.
 - **Client-Side Rendering:** A significant portion of the UI is rendered on the client-side using JavaScript. This approach enables a more dynamic and interactive user experience, as content can be updated without full page reloads.
-- **Modular Structure:** The project is organized into distinct modules (`controllers`, `routes`, `views`, `public`), which improves code organization and maintainability.
+- **Modular Structure:** The project is organized into distinct modules (`config`, `services`, `controllers`, `routes`, `views`, `public`), which improves code organization, separation of concerns, and maintainability.
 
 ## 4. Future Improvements
 
