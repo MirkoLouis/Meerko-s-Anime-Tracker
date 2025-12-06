@@ -77,4 +77,5 @@ tag_map = {
     'Seinen': 76,
     'Shoujo': 77,
     'Shounen': 78,
+    'NO TAGS': 79,
 }

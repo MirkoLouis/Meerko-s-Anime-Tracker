@@ -31,13 +31,19 @@ The application is built on a classic client-server architecture with a clear se
     - **Data Integrity:** Enforces data integrity through a structured schema with relationships between tables. The `user` table includes a `role` column (`user` or `admin`) to support Role-Based Access Control.
 
 ### 2.4. Database Seeding
-- **Technology:** Python with the `requests` and `tqdm` libraries.
+- **Technology:** Python with `aiohttp`, `tqdm` (dependencies listed in `auto insert to db/requirements.txt`).
 - **Responsibilities:**
-    - **Data Fetching:** The Python scripts in the `auto insert to db` directory are responsible for fetching large amounts of data from the public Jikan API.
+    - **Data Fetching:** The Python scripts in the `auto insert to db` directory are responsible for fetching large amounts of data from the public Jikan API asynchronously.
     - **Data Processing and Sanitization:** The scripts process the raw API data, sanitize it to prevent SQL injection and other errors, and format it into SQL `INSERT` statements.
-    - **SQL Generation:** The scripts generate `.sql` files containing the `INSERT` statements for the `Anime`, `Studio`, `Tags`, and `Anime_Tags` tables. This allows for a large, consistent dataset to be easily imported into the MySQL database.
-    - **Map Creation:** Utility scripts are included to generate Python dictionaries that map studio and tag names to their respective primary keys in the database. This is useful for the main data insertion script (`autoinsert2.py`).
-    - **Sample Data Generation:** The `randomwatchlist.py` script generates random watchlist data for users, which is useful for testing and demonstration purposes.
+    - **SQL Generation & Map Creation:**
+        - `studiocatcher2.py`: Fetches studio data and generates `insert_studios.sql`.
+        - `tagcatcher.py`: Fetches tag data and generates `insert_tags.sql`.
+        - `studiomapcreator2.py`: Parses `insert_studios.sql` to create `studio_map.txt`.
+        - `tagmapcreator.py`: Parses `insert_tags.sql` to create `tag_map.txt`.
+        - `autoinsert3.py`: The main script that fetches anime data, processes it, and generates the final `insert_anime_{count}.sql`. It dynamically creates the studio and tag maps by loading from `.txt` files (if available) or parsing from `.sql` files, making the process more efficient.
+    - **Sample Data Generation:**
+        - `randomwatchlist.py` generates random watchlist data for users.
+        - `randomcomments.py` generates random comments for a subset of animes.
 
 ## 3. Key Architectural Decisions
 

@@ -3,10 +3,10 @@ import random
 # Import the random module for generating random numbers and choices.
 
 # Define constants for user IDs, anime IDs, watchlist statuses, and maximum entries per user.
-USER_IDS = range(1, 11)  # UserID range from 1 to 10
-ANIME_IDS = range(1, 14499)  # AnimeID range from 1 to 5000
+USER_IDS = range(1, 11)  # Total Users + 1
+ANIME_IDS = range(1, 15193)  # Total Animes + 1
 STATUS_OPTIONS = ['Completed', 'Watching', 'Plan to Watch']  # Status options
-MAX_WATCHLIST_PER_USER = 100  # Max watchlist entries per user
+MAX_WATCHLIST_PER_USER = 500  # Max watchlist entries per user
 
 # Generates a single SQL INSERT statement for populating the 'watchlist' table with random data.
 def generate_watchlist_insert():
@@ -30,7 +30,7 @@ def generate_watchlist_insert():
     return sql_statement
 
 # Define the output file path for the SQL insert statement.
-output_file = "watchlist_inserts.sql"
+output_file = "insert_watchlists.sql"
 
 # Open the output file in write mode and write the generated SQL statement to it.
 with open(output_file, 'w') as file:
