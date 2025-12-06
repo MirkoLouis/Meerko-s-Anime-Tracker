@@ -58,23 +58,46 @@
         </div>
     </nav>
     <main class="container my-5">
-        <div class="row">
-            <div class="col-md-4">
-                <img id="anime-image" src="" alt="" class="img-fluid rounded" style="height: 100%;">
+        <div id="anime-details-banner" class="text-center bg-image" style="background-image: url(''); height: 100px; background-size: cover; background-position: center;">
+            <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); height: 100%; display: flex; align-items: center; justify-content: center;">
+                <div class="text-white">
+                    <h1 id="anime-title-banner" class="mb-3"></h1>
+                </div>
             </div>
-            <div class="col-md-8">
+        </div>
+
+        <div class="d-flex mt-5">
+            <div class="flex-shrink-0">
+                <img id="anime-image" src="" alt="" class="img-fluid rounded shadow" style="width: 250px;">
+            </div>
+            <div class="flex-grow-1 ms-4">
                 <h1 id="anime-title"></h1>
-                <p><strong>Type:</strong> <span id="anime-type"></span></p>
-                <p><strong>Episodes:</strong> <span id="anime-episodes"></span></p>
-                <p><strong>Status:</strong> <span id="anime-status"></span></p>
-                <p><strong>Airing Start:</strong> <span id="anime-airing-start"></span></p>
-                <p><strong>Airing End:</strong> <span id="anime-airing-end"></span></p>
-                <p><strong>Rating:</strong> <span id="anime-rating"></span></p>
-                <p><strong>Studio:</strong> <span id="anime-studio-name"></span></p>
-                <p><strong>Genres:</strong> <span id="anime-genres"></span></p>
-                <p><strong>Synopsis:</strong></p>
-                <p id="anime-synopsis"></p>
-                <button id="add-to-watchlist-btn" class="btn btn-primary">Add to Watchlist</button>
+                <div class="card">
+                    <div class="card-body">
+                        <p><strong>Type:</strong> <span id="anime-type"></span></p>
+                        <p><strong>Episodes:</strong> <span id="anime-episodes"></span></p>
+                        <p><strong>Status:</strong> <span id="anime-status"></span></p>
+                        <p><strong>Airing Start:</strong> <span id="anime-airing-start"></span></p>
+                        <p><strong>Airing End:</strong> <span id="anime-airing-end"></span></p>
+                        <p><strong>Rating:</strong> <span id="anime-rating"></span></p>
+                        <p><strong>Studio:</strong> <span id="anime-studio-name"></span></p>
+                        <p><strong>Genres:</strong> <span id="anime-genres"></span></p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button id="add-to-watchlist-btn" class="btn btn-primary btn-lg">Add to Watchlist</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Synopsis</h5>
+                        <p id="anime-synopsis"></p>
+                    </div>
+                </div>
             </div>
         </div>
 

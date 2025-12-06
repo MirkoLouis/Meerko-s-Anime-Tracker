@@ -61,6 +61,8 @@ async function fetchAnimeDetails(currentUser) {
         const anime = await response.json();
 
         if (anime) {
+            document.getElementById('anime-details-banner').style.backgroundImage = `url('${anime.image_url}')`;
+            document.getElementById('anime-title-banner').textContent = anime.title || 'Unknown Title';
             document.getElementById('anime-image').src = anime.image_url || '';
             document.getElementById('anime-image').alt = anime.title || 'Anime Image';
             document.getElementById('anime-title').textContent = anime.title || 'Unknown Title';
@@ -125,7 +127,7 @@ async function fetchAndRenderComments(animeId, currentUser) {
                     const deleteButtonWrapper = document.createElement('div');
                     deleteButtonWrapper.classList.add('ms-3', 'mt-3'); // Add margin-left for spacing
                     deleteButtonWrapper.innerHTML = `
-                        <button class="btn btn-danger btn-sm" onclick="deleteComment(${comment.CommentID}, ${animeId})">Delete</button>
+                        <button class="btn btn-danger btn-md" onclick="deleteComment(${comment.CommentID}, ${animeId})">Delete</button>
                     `;
                     commentContainer.appendChild(deleteButtonWrapper);
                 }

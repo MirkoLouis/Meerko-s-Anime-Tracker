@@ -116,6 +116,7 @@ This data flow allows for a responsive and interactive user experience, as the p
         mysql -u your_database_user -p your_database_name < "auto insert to db/anime_insert_14503.sql"
         ```
         **Note:** This script only populates the `anime` table. For fully consistent data (e.g., tags for all anime), you may need to run additional seeding scripts as described in Option 3.
+        **Important Note:** If you have made schema changes (e.g., added the `comments` table or `role` column to the `user` table), you should manually run `auto insert to db/database_creation.sql` and `auto insert to db/user_inserts.sql` after creating the database, as `Dump20250513.sql` might not reflect the latest schema and user role configurations.
 
     ### Option 3: Full Data Seeding (Developer)
     This option is for developers who want to generate the entire dataset from scratch using the Python seeding scripts. This gives you the most control over the data but is also the most complex method.
