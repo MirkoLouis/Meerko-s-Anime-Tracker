@@ -531,7 +531,7 @@ function fetchNewAnimes() {
                                             <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4z"/>
                                         </svg> Add to Watchlist
                                     </a>
-                                    <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2">View Details</a>
+                                    <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2" style="margin-top:10px;">View Details</a>
                                 </div>
                             </div>
                         </div>`;
@@ -619,7 +619,7 @@ function fetchUpcomingAnimes() {
                                             <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4z"/>
                                         </svg> Add to Watchlist
                                     </a>
-                                    <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2">View Details</a>
+                                    <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2" style="margin-top:10px;">View Details</a>
                                 </div>
                             </div>
                         </div>`;
@@ -799,7 +799,7 @@ function fetchRandomAnimes() {
                                 <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4z"/>
                             </svg> Add to Watchlist
                         </a>
-                        <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2">View Details</a>
+                        <a href="/anime/${anime.AnimeID}" class="btn btn-secondary btn-radius mr-2" style="margin-top:10px;">View Details</a>
                     </div>
                 `;
                 randomAnimesContainer.appendChild(animeCard);

@@ -107,5 +107,22 @@
         window.currentUser = {{#if user}}JSON.parse('{{{json user}}}'){{else}}null{{/if}};
     </script>
     <script src="/animefetcher.js"></script>
+    <!-- Script to toggle between light and dark themes, saving the preference to local storage. -->
+    <script>
+        const toggleBtn = document.getElementById('theme-toggle');
+        toggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark-theme');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light');
+        });
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark-theme');
+        }
+    </script>
+    <footer class="w-100 text-center py-1">
+        <!-- Footer section displaying copyright information. -->
+        <p class="mb-0">&copy; 2025 Meerko. All rights reserved. Made by Mirko for a final project.</p>
+    </footer>
 </body>
 </html>
