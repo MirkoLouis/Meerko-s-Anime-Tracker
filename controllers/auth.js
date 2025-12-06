@@ -125,6 +125,19 @@ exports.verifyUser = (req, res, next) => {
     }
 };
 
+// Middleware to ensure the user has an 'admin' role.
+// This is used to protect routes that only administrators should access.
+exports.ensureAdmin = (req, res, next) => {
+    if (!req.user || req.user.role !== 'admin') {
+        if (req.originalUrl.startsWith('/api')) {
+            return res.status(403).json({ error: 'Forbidden: Admins only' });
+        }
+        // Assuming a 403.hbs or similar view for forbidden access
+        return res.status(403).render('403', { message: 'Forbidden: You do not have admin access.' });
+    }
+    next();
+};
+
 // Register Logic
 // Handles user registration.
 // Validates input, checks for existing users, hashes the password, inserts the new user into the database,
@@ -161,12 +174,12 @@ exports.register = async (req, res) => {
 
         const [insertResult] = await db.query(
             'INSERT INTO user SET ?',
-            { username, userpassword: hashedPassword, display_name: displayname, email, first_login: null }
+            { username, userpassword: hashedPassword, display_name: displayname, email, first_login: null, role: 'user' }
         );
 
         const userId = insertResult.insertId;
 
-        const token = jwt.sign({ id: userId, username, display_name: displayname }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ id: userId, username, display_name: displayname, role: 'user' }, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
 
@@ -218,7 +231,7 @@ exports.login = async (req, res) => {
             return res.render('login', { message: 'Invalid username or password.' });
         }
 
-        const token = jwt.sign({ id: user.UserID, username: user.username, display_name: user.display_name }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ id: user.UserID, username: user.username, display_name: user.display_name, role: user.role }, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
 

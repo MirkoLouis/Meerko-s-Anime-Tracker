@@ -67,7 +67,6 @@ CREATE TABLE `user` (
   `email` varchar(100) NOT NULL,
   `first_login` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `Last_login` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `role` enum('user','admin') DEFAULT 'user',
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `display_name` (`display_name`),
@@ -107,23 +106,4 @@ CREATE TABLE `anime_tags` (
         FOREIGN KEY (`AnimeID`) REFERENCES `anime` (`AnimeID`) ON DELETE CASCADE,
   CONSTRAINT `anime_tags_ibfk_2`
         FOREIGN KEY (`TagID`) REFERENCES `tags` (`TagID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- ------------------------------------------------------
--- Table: comments
--- ------------------------------------------------------
-DROP TABLE IF EXISTS `comments`;
-CREATE TABLE `comments` (
-  `CommentID` int NOT NULL AUTO_INCREMENT,
-  `AnimeID` int NOT NULL,
-  `UserID` int NOT NULL,
-  `comment_text` text NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`CommentID`),
-  KEY `AnimeID` (`AnimeID`),
-  KEY `UserID` (`UserID`),
-  CONSTRAINT `comments_ibfk_1`
-        FOREIGN KEY (`AnimeID`) REFERENCES `anime` (`AnimeID`) ON DELETE CASCADE,
-  CONSTRAINT `comments_ibfk_2`
-        FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

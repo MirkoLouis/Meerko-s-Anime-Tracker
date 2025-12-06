@@ -25,6 +25,11 @@ Meerko's Anime Tracker is a web app for anime fans to track their favorite serie
 - **Status Updates:** Users can update the status of an anime in their watchlist to "Watching", "Plan to Watch", or "Completed".
 - **Completed List:** A separate section to view all the animes the user has completed.
 
+### Comments and Moderation
+- **User Comments:** Logged-in users can post comments on individual anime pages.
+- **Guest Viewing:** Guest users can view comments but are prompted to log in to post.
+- **Admin Moderation:** Users with an 'admin' role have the ability to delete any comment, ensuring a safe and respectful community environment.
+
 ### Personalized Dashboard
 - **User-Specific Spotlight:** The dashboard displays a personalized spotlight of anime recommendations based on the user's watchlist and viewing history.
 - **Watchlist Overview:** The dashboard provides a quick overview of the user's watchlist.
@@ -34,7 +39,7 @@ Meerko's Anime Tracker is a web app for anime fans to track their favorite serie
 The application follows a modern client-server architecture, with a clear separation between the backend and frontend.
 
 ### Backend (API & Database)
-1.  **Database:** A MySQL database stores all the application data, including user information, anime details, and watchlist entries.
+1.  **Database:** A MySQL database stores all the application data, including user information, anime details, watchlist entries, and comments.
 2.  **Node.js/Express Server:** The backend is built with Node.js and the Express framework. It acts as a RESTful API server.
 3.  **API Endpoints:** The server exposes various API endpoints to handle user authentication, anime data retrieval, and watchlist management.
     -   `/auth` endpoints handle user registration, login, and logout.

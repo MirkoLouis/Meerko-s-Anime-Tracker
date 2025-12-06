@@ -1,9 +1,17 @@
 // Anime Sections Loader
 // Event listener that fires when the DOM is fully loaded.
 // It initializes various anime sections and functionalities on the page.
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Get currentUser from global variable set in Handlebars template
+    const currentUser = window.currentUser;
+
     if (window.location.pathname.includes('/anime/')) {
-        fetchAnimeDetails();
+        await fetchAnimeDetails(currentUser);
+        // Attach event listener for comment form submission
+        const commentForm = document.getElementById('comment-form');
+        if (commentForm) {
+            commentForm.addEventListener('submit', (event) => submitComment(event, currentUser));
+        }
     } else if (window.location.pathname.includes('/dashboard')) {
         populateDashboardSpotlight();
         fetchNewAnimes();
@@ -38,7 +46,7 @@ function fetchAllTags() {
 
 fetchAllTags(); // Call it once on initial load
 
-async function fetchAnimeDetails() {
+async function fetchAnimeDetails(currentUser) {
     const animeId = window.location.pathname.split('/').pop();
     if (!animeId) {
         console.error('Anime ID not found in URL.');
@@ -53,7 +61,8 @@ async function fetchAnimeDetails() {
         const anime = await response.json();
 
         if (anime) {
-            document.getElementById('anime-image').src = anime.image_url || 'Anime Image';
+            document.getElementById('anime-image').src = anime.image_url || '';
+            document.getElementById('anime-image').alt = anime.title || 'Anime Image';
             document.getElementById('anime-title').textContent = anime.title || 'Unknown Title';
             document.getElementById('anime-type').textContent = anime.type || 'N/A';
             document.getElementById('anime-episodes').textContent = anime.episodes || 'N/A';
@@ -71,6 +80,7 @@ async function fetchAnimeDetails() {
             }
 
             console.log('Anime details populated successfully.');
+            await fetchAndRenderComments(anime.AnimeID, currentUser); // Fetch and render comments after anime details
         } else {
             console.error('No anime data received.');
         }
@@ -78,6 +88,135 @@ async function fetchAnimeDetails() {
         console.error('Error fetching anime details:', error);
     }
 }
+
+// Function to fetch and render comments for an anime
+async function fetchAndRenderComments(animeId, currentUser) {
+    const commentsList = document.getElementById('comments-list');
+    commentsList.innerHTML = '<p>Loading comments...</p>';
+
+    try {
+        const response = await fetch(`/api/anime/${animeId}/comments`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const comments = await response.json();
+
+        commentsList.innerHTML = ''; // Clear loading message
+
+        if (comments.length === 0) {
+            commentsList.innerHTML = '<p>No comments yet. Be the first to comment!</p>';
+        } else {
+            comments.forEach(comment => {
+                const commentContainer = document.createElement('div');
+                commentContainer.classList.add('d-flex', 'align-items-start', 'mb-3'); // Flex container for comment and button
+
+                const commentElement = document.createElement('div');
+                commentElement.classList.add('card', 'flex-grow-1'); // Comment card takes available space
+                commentElement.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${comment.display_name}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">${new Date(comment.created_at).toLocaleString()}</h6>
+                        <p class="card-text">${comment.comment_text}</p>
+                    </div>
+                `;
+                commentContainer.appendChild(commentElement);
+
+                if (currentUser && currentUser.role === 'admin') {
+                    const deleteButtonWrapper = document.createElement('div');
+                    deleteButtonWrapper.classList.add('ms-3', 'mt-3'); // Add margin-left for spacing
+                    deleteButtonWrapper.innerHTML = `
+                        <button class="btn btn-danger btn-sm" onclick="deleteComment(${comment.CommentID}, ${animeId})">Delete</button>
+                    `;
+                    commentContainer.appendChild(deleteButtonWrapper);
+                }
+                commentsList.appendChild(commentContainer);
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching and rendering comments:', error);
+        commentsList.innerHTML = '<p>Error loading comments.</p>';
+    }
+}
+
+// Function to submit a new comment
+async function submitComment(event, currentUser) {
+    event.preventDefault(); // Prevent default form submission
+
+    if (!currentUser) {
+        showAlert('Please log in to leave a comment.', 'info');
+        // Optionally redirect to login page
+        // window.location.href = '/login';
+        return;
+    }
+
+    const animeId = window.location.pathname.split('/').pop();
+    const commentInput = document.getElementById('comment-input');
+    const comment_text = commentInput.value.trim();
+
+    if (!comment_text) {
+        showAlert('Comment cannot be empty.', 'warning');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/anime/${animeId}/comments`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${document.cookie.split('; ').find(row => row.startsWith('jwt='))?.split('=')[1]}`
+            },
+            body: JSON.stringify({ comment_text })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showAlert('Comment added successfully!', 'success');
+            commentInput.value = ''; // Clear the input field
+            await fetchAndRenderComments(animeId, currentUser); // Re-render comments
+        } else {
+            showAlert(data.error || 'Failed to add comment.', 'danger');
+        }
+    } catch (error) {
+        console.error('Error submitting comment:', error);
+        showAlert('An error occurred while submitting comment.', 'danger');
+    }
+}
+
+// Function to delete a comment
+async function deleteComment(commentId, animeId) {
+    if (!confirm('Are you sure you want to delete this comment?')) {
+        return;
+    }
+
+    const currentUser = window.currentUser; // Get current user again for safety
+    if (!currentUser || currentUser.role !== 'admin') {
+        showAlert('You do not have permission to delete comments.', 'danger');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/comments/${commentId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${document.cookie.split('; ').find(row => row.startsWith('jwt='))?.split('=')[1]}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showAlert('Comment deleted successfully!', 'success');
+            await fetchAndRenderComments(animeId, currentUser); // Re-render comments
+        } else {
+            showAlert(data.error || 'Failed to delete comment.', 'danger');
+        }
+    } catch (error) {
+        console.error('Error deleting comment:', error);
+        showAlert('An error occurred while deleting comment.', 'danger');
+    }
+}
+
 // Anime Spotlight
 
 // Function to fetch anime spotlights data

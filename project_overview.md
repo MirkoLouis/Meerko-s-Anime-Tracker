@@ -11,23 +11,24 @@ The application is built on a classic client-server architecture with a clear se
 ### 2.1. Backend
 - **Technology Stack:** Node.js with the Express.js framework.
 - **Responsibilities:**
-    - **API Server:** Exposes a RESTful API to handle all data-related operations.
+    - **API Server:** Exposes a RESTful API to handle all data-related operations, including CRUD operations for comments.
     - **Database Interaction:** Communicates with the MySQL database to store and retrieve data.
-    - **Authentication:** Manages user authentication and authorization using JSON Web Tokens (JWT).
+    - **Authentication & Authorization:** Manages user authentication and authorization using JSON Web Tokens (JWT). Includes middleware to protect routes and implement Role-Based Access Control (e.g., ensuring only admins can delete comments).
     - **Routing:** Defines the application's routes and maps them to the appropriate controller logic.
 
 ### 2.2. Frontend
 - **Technology Stack:** Standard HTML, CSS, and JavaScript, with Handlebars.js for server-side templating.
 - **Responsibilities:**
-    - **User Interface:** Renders the user interface and displays data fetched from the backend.
-    - **Client-Side Logic:** Handles all user interactions, such as form submissions, button clicks, and dynamic content updates.
-    - **API Consumption:** Makes AJAX calls to the backend API to fetch and send data.
+    - **User Interface:** Renders the user interface and displays data fetched from the backend, including comments on anime pages.
+    - **Client-Side Logic:** Handles all user interactions, such as form submissions, button clicks, and dynamic content updates for comments.
+    - **API Consumption:** Makes AJAX calls to the backend API to fetch, create, and delete comments.
+    - **Role-Based UI:** Dynamically displays UI elements, such as comment deletion buttons, based on the user's role.
 
 ### 2.3. Database
 - **Technology:** MySQL relational database.
 - **Responsibilities:**
-    - **Data Persistence:** Stores all application data, including user accounts, anime information, studio details, tags, and user watchlists.
-    - **Data Integrity:** Enforces data integrity through a structured schema with relationships between tables.
+    - **Data Persistence:** Stores all application data, including user accounts, anime information, studio details, tags, user watchlists, and comments.
+    - **Data Integrity:** Enforces data integrity through a structured schema with relationships between tables. The `user` table includes a `role` column (`user` or `admin`) to support Role-Based Access Control.
 
 ### 2.4. Database Seeding
 - **Technology:** Python with the `requests` and `tqdm` libraries.

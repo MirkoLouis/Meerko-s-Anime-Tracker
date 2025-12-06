@@ -23,7 +23,7 @@ app.use(compression());
 app.use(morgan('dev')); // or 'combined' for even more detailed logs
 
 app.use((req, res, next) => {
-    res.setHeader("Content-Security-Policy", "connect-src 'self' http://localhost:3000 https://cdn.jsdelivr.net");
+    res.setHeader("Content-Security-Policy", "connect-src 'self' http://localhost:3000 https://cdn.jsdelivr.net https://unpkg.com;");
     next();
 });
 
@@ -115,6 +115,10 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
 // Set Handlebars (hbs) as the template engine for rendering views
+const hbs = require('hbs');
+hbs.registerHelper('json', function(context) {
+    return JSON.stringify(context);
+});
 app.set('view engine', 'hbs');
 
 // Favicon Server
@@ -136,7 +140,7 @@ app.get("/favicon.ico", function(req, res) {
 // This middleware checks for a JWT in incoming requests (from cookies or Authorization header).
 // If a valid token is found, it verifies it and attaches the decoded payload to the request object.
 const jwt = require('jsonwebtoken');
-const { requireAuth } = require('./controllers/auth');
+const { requireAuth, ensureAdmin } = require('./controllers/auth');
 
 app.use((req, res, next) => {
     const token = req.cookies.jwt || req.headers['authorization']?.split(' ')[1]; // Check cookie or Bearer token
@@ -156,6 +160,67 @@ app.use((req, res, next) => {
         }
         next(); // Continue to the next middleware or route
     });
+});
+
+// Comment API Endpoints
+// GET all comments for a specific anime
+app.get('/api/anime/:animeId/comments', async (req, res) => {
+    const { animeId } = req.params;
+    try {
+        const [comments] = await db.query(
+            `SELECT c.CommentID, c.comment_text, c.created_at, u.display_name, u.UserID, u.role
+             FROM comments c
+             JOIN user u ON c.UserID = u.UserID
+             WHERE c.AnimeID = ?
+             ORDER BY c.created_at ASC`,
+            [animeId]
+        );
+        res.json(comments);
+    } catch (err) {
+        console.error('Error fetching comments:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// POST a new comment for a specific anime
+app.post('/api/anime/:animeId/comments', requireAuth, async (req, res) => {
+    const { animeId } = req.params;
+    const { comment_text } = req.body;
+    const userID = req.user.id; // From requireAuth middleware
+
+    if (!comment_text || comment_text.trim() === '') {
+        return res.status(400).json({ error: 'Comment text cannot be empty.' });
+    }
+
+    try {
+        const [result] = await db.query(
+            'INSERT INTO comments (AnimeID, UserID, comment_text) VALUES (?, ?, ?)',
+            [animeId, userID, comment_text]
+        );
+        res.status(201).json({ success: true, message: 'Comment added.', commentId: result.insertId });
+    } catch (err) {
+        console.error('Error adding comment:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// DELETE a comment (Admin only)
+app.delete('/api/comments/:commentId', requireAuth, ensureAdmin, async (req, res) => {
+    const { commentId } = req.params;
+    try {
+        const [result] = await db.query(
+            'DELETE FROM comments WHERE CommentID = ?',
+            [commentId]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Comment not found.' });
+        }
+        res.json({ success: true, message: 'Comment deleted.' });
+    } catch (err) {
+        console.error('Error deleting comment:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
 });
 
 // Protected Route for the Dashboard
@@ -741,9 +806,9 @@ app.get('/api/user/spotlight', requireAuth, async (req, res) => {
                     s.studio_name,
                     s.rating AS studio_rating,
                     (SELECT GROUP_CONCAT(t.tag ORDER BY t.tag SEPARATOR ', ')
-                     FROM anime_tags at2
-                     JOIN tags t ON at2.TagID = t.TagID
-                     WHERE at2.AnimeID = a.AnimeID
+                        FROM anime_tags at2
+                        JOIN tags t ON at2.TagID = t.TagID
+                        WHERE at2.AnimeID = a.AnimeID
                     ) AS genres,
                     COUNT(w.WatchlistID) AS watchlist_count
                 FROM Anime a
