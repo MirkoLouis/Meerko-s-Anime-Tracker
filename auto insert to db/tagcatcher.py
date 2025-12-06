@@ -22,7 +22,7 @@ if response.status_code == 200:
         values.append(f"('{tag_name}')")
 
     # Join values with commas, add semicolon at end
-    sql_lines.append(",\n".join(values) + ";")
+    sql_lines.append(",\n".join(values) + ",\n('NO TAGS');")
 
     # Write to file
     with open("insert_tags.sql", "w", encoding="utf-8") as f:
