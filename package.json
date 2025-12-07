@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.11.3",
     "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
@@ -20,11 +21,14 @@
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.0",
     "hbs": "^4.2.0",
+    "jquery": "^3.7.1",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.14.0",
     "nodemon": "^3.1.9",
-    "session": "^0.1.0"
+    "session": "^0.1.0",
+    "swiper": "^12.0.3",
+    "vanilla-lazyload": "^19.1.3"
   }
 }

@@ -24,7 +24,7 @@ function createSearchCard(anime) {
     const img = document.createElement('img');
     img.className = 'card-img-top lazy';
     img.setAttribute('data-src', anime.image_url);
-    img.src = anime.image_url;
+    img.src = '/imnota-cat-fubuki.gif'; // Use placeholder
     img.alt = anime.title;
     
     const cardBody = document.createElement('div');

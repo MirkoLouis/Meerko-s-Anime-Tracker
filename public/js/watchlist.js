@@ -8,37 +8,43 @@ let currentCompletedWatchlist = [];
 // Watchlist Toggle
 // Event listener for the "My Watchlist" button. Toggles the visibility of the main watchlist container.
 // When activated, it hides the completed watchlist and renders the current watchlist.
-document.getElementById('myListBtn').addEventListener('click', () => {
-    watchlistVisible = !watchlistVisible;
-    const watchlistContainer = document.getElementById('watchlist-container');
-    const completedContainer = document.getElementById('completed-container');
+const myListBtn = document.getElementById('myListBtn');
+if (myListBtn) {
+    myListBtn.addEventListener('click', () => {
+        watchlistVisible = !watchlistVisible;
+        const watchlistContainer = document.getElementById('watchlist-container');
+        const completedContainer = document.getElementById('completed-container');
 
-    if (watchlistVisible) {
-        completedWatchlistVisible = false;
-        fadeSwapContent('watchlist-container', () => renderWatchlist(currentPage));
-        completedContainer.innerHTML = '';
-    } else {
-        watchlistVisible = false;
-        watchlistContainer.innerHTML = '';
-    }
-});
+        if (watchlistVisible) {
+            completedWatchlistVisible = false;
+            fadeSwapContent('watchlist-container', () => renderWatchlist(currentPage));
+            completedContainer.innerHTML = '';
+        } else {
+            watchlistVisible = false;
+            watchlistContainer.innerHTML = '';
+        }
+    });
+}
 
 // Event listener for the "My Completed Animes" button. Toggles the visibility of the completed watchlist container.
 // When activated, it hides the current watchlist and renders the completed watchlist.
-document.getElementById('myCompletedAnimesBtn').addEventListener('click', () => {
-    completedWatchlistVisible = !completedWatchlistVisible;
-    const completedContainer = document.getElementById('completed-container');
-    const watchlistContainer = document.getElementById('watchlist-container');
+const myCompletedAnimesBtn = document.getElementById('myCompletedAnimesBtn');
+if (myCompletedAnimesBtn) {
+    myCompletedAnimesBtn.addEventListener('click', () => {
+        completedWatchlistVisible = !completedWatchlistVisible;
+        const completedContainer = document.getElementById('completed-container');
+        const watchlistContainer = document.getElementById('watchlist-container');
 
-    if (completedWatchlistVisible) {
-        watchlistVisible = false;
-        fadeSwapContent('completed-container', () => renderCompletedWatchlist());
-        watchlistContainer.innerHTML = '';
-    } else {
-        completedWatchlistVisible = false;
-        completedContainer.innerHTML = '';
-    }
-});
+        if (completedWatchlistVisible) {
+            watchlistVisible = false;
+            fadeSwapContent('completed-container', () => renderCompletedWatchlist());
+            watchlistContainer.innerHTML = '';
+        } else {
+            completedWatchlistVisible = false;
+            completedContainer.innerHTML = '';
+        }
+    });
+}
 
 function createWatchlistCard(anime, cardType = 'watchlist') {
     const col = document.createElement('div');

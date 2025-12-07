@@ -2,7 +2,7 @@
 
 ## Description
 
-Meerko's Anime Tracker is a web app for anime fans to track their favorite series. Users can create accounts, search, add anime to watchlists, and manage watching status. It offers a personalized experience with a user dashboard, recommendations, and a comprehensive search and filtering system.
+Meerko's Anime Tracker is a full-stack web application for anime fans to track their favorite series. Built with Node.js, Express.js, Handlebars.js, and MySQL, it allows users to create accounts, search, add anime to watchlists, and manage watching status. It offers a personalized experience with a user dashboard, recommendations, and a comprehensive search and filtering system.
 
 ## Features
 
@@ -19,6 +19,7 @@ Meerko's Anime Tracker is a web app for anime fans to track their favorite serie
 - **Random Anime:** Get a random selection of animes to discover something new.
 - **Comprehensive Search:** A powerful search functionality that allows users to search for anime by title.
 - **Advanced Filtering:** Search results can be filtered by tags, studios, and ratings.
+- **Anime Details Page:** Dedicated pages for each anime displaying detailed information, including description, tags, studio, and user comments.
 
 ### Watchlist Management
 - **Personalized Watchlist:** Each user has their own watchlist to keep track of animes they plan to watch or are currently watching.

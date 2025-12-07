@@ -72,6 +72,12 @@ app.use((req, res, next) => {
 
 const db = require('./config/database');
 
+// Serve Bootstrap from node_modules
+app.use('/vendor/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
+app.use('/vendor/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
+app.use('/vendor/swiper', express.static(path.join(__dirname, 'node_modules/swiper')));
+app.use('/vendor/vanilla-lazyload', express.static(path.join(__dirname, 'node_modules/vanilla-lazyload/dist')));
+
 // Serve static files (CSS, client-side JS, images) from the 'public' directory
 const publicDirectory = path.join(__dirname, './public')
 console.log(__dirname);
