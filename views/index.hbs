@@ -27,6 +27,12 @@
     <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js"></script>
 </head>
 <body>
+    {{#if user}}
+    <script nonce="{{cspNonce}}">
+        // Safely expose the user object to the window for client-side scripts
+        window.currentUser = {{{json user}}};
+    </script>
+    {{/if}}
 
     <!-- Alert Container -->
     <!-- This div serves as a container for displaying toast notifications or alerts to the user. -->
@@ -56,7 +62,7 @@
 
                 <!-- Center: Search -->
                 <div class="col-md-6 text-center">
-                    <form id="search-form" class="d-inline-flex justify-content-center align-items-center w-50" role="search" onsubmit="handleSearch(event)">
+                    <form id="search-form" class="d-inline-flex justify-content-center align-items-center w-50" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search anime..." aria-label="Search" id="search-input">
                         <button class="btn btn-warning" type="submit">Search</button>
                     </form>
@@ -69,7 +75,7 @@
                             <li><a href="/">Home</a></li>
                             <li><a href="/dashboard">Dashboard</a></li>
                             <li>
-                                <form action="/auth/logout" method="POST" onsubmit="return confirm('Are you sure you want to log out?');" style="display:inline;">
+                                <form action="/auth/logout" method="POST" style="display:inline;">
                                     <button type="submit" class="btn btn-danger btn-sm logout-btn">Logout</button>
                                 </form>
                             </li>
@@ -287,61 +293,13 @@
 
     <!-- Main client-side JavaScript for fetching and rendering anime data, and managing user interactions. -->
     <script src="/js/utils.js"></script>
+    <script src="/js/index-inline.js"></script>
     <script src="/js/carousels.js"></script>
     <script src="/js/search.js"></script>
     <script src="/js/main.js"></script>
     <!-- Bootstrap JavaScript bundle for components like carousels, modals, and tooltips. -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <!-- Script to add a 'sticky' class to the navbar when the user scrolls down, for visual effect. -->
-    <script>
-        window.addEventListener('scroll', function () {
-            var navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('sticky');
-            } else {
-                navbar.classList.remove('sticky');
-            }
-        });
-    </script>
-    <!-- Script to trigger a search when the search input field gains focus for the first time. -->
-    <script>
-        let hasSearchedOnFocus = false;
-
-        document.getElementById('search-input').addEventListener('focus', function () {
-            if (!hasSearchedOnFocus) {
-                handleSearch(null, 1);
-                hasSearchedOnFocus = true;
-            }
-        });
-    </script>
-    <!-- Initializes the Vanilla LazyLoad library for images with the 'lazy' class,
-    improving page load performance by loading images only when they enter the viewport. -->
-    <script>
-        const lazyLoadInstance = new LazyLoad({
-            elements_selector: ".lazy"
-            // You can add more options here
-        });
-    </script>
-    <!-- Script to attach an event listener to the "randomizeBtn" to fetch and display random animes. -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-        document.getElementById('randomizeBtn').addEventListener('click', fetchRandomAnimes);
-        });
-    </script>
-    <!-- Script to toggle between light and dark themes, saving the preference to local storage. -->
-    <script>
-        const toggleBtn = document.getElementById('theme-toggle');
-        toggleBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark-theme');
-            localStorage.setItem('theme', document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light');
-        });
-
-        // Load saved theme
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark-theme');
-        }
-    </script>
+    
     <!-- Provides a warning message to users if JavaScript is disabled in their browser,
     as the site relies heavily on JavaScript for functionality. -->
     <noscript>

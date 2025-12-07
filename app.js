@@ -7,8 +7,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const morgan = require('morgan');
-
-
+const crypto = require('crypto');
 
 // Initialize the Express application
 const app = express();
@@ -24,13 +23,16 @@ app.use(morgan('dev'));
 
 // Middleware to set various security headers to enhance application security.
 app.use((req, res, next) => {
+    // Generate a nonce for each request
+    res.locals.cspNonce = crypto.randomBytes(16).toString("hex");
+
     // Content Security Policy (CSP) to prevent XSS and data injection attacks.
     res.setHeader("Content-Security-Policy", 
         "default-src 'self'; " +
-        "script-src 'self' https://code.jquery.com https://cdn.jsdelivr.net https://unpkg.com; " +
+        `script-src 'self' https://code.jquery.com https://cdn.jsdelivr.net https://unpkg.com 'nonce-${res.locals.cspNonce}'; ` +
         "style-src 'self' https://cdn.jsdelivr.net https://unpkg.com 'unsafe-inline'; " +
         "img-src 'self' data: https://cdn.myanimelist.net; " +
-        "connect-src 'self'; " +
+        "connect-src 'self' https://unpkg.com https://cdn.jsdelivr.net; " +
         "font-src 'self' https://cdn.jsdelivr.net; " +
         "frame-ancestors 'self'; " +
         "form-action 'self';"
@@ -45,7 +47,8 @@ app.use((req, res, next) => {
 // Custom middleware for logging incoming requests with a timestamp
 app.use((req, res, next) => {
     const time = new Date().toISOString();
-    console.log(`[${time}] ${req.method} ${req.url}`);
+    const userAgent = req.headers['user-agent'];
+    console.log(`[${time}] ${req.method} ${req.url} [User-Agent: ${userAgent}]`);
     next();
 });
 

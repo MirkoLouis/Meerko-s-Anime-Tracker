@@ -79,7 +79,9 @@ function updateSpotlight(anime) {
             });
         }
 
-        lazyLoadInstance.update();
+        if (typeof lazyLoadInstance !== 'undefined' && typeof lazyLoadInstance.update === 'function') {
+            lazyLoadInstance.update();
+        }
 
         console.log('Successfully updated spotlight with anime data');
     } catch (error) {
@@ -225,7 +227,10 @@ function updateDashboardSpotlight(anime) {
             });
         }
 
-        console.log('Dashboard spotlight updated');
+        if (typeof lazyLoadInstance !== 'undefined' && typeof lazyLoadInstance.update === 'function') {
+            lazyLoadInstance.update();
+        }
+
     } catch (error) {
         console.error('Error updating dashboard spotlight:', error);
     }
@@ -237,6 +242,7 @@ function updateDashboardSpotlight(anime) {
 async function populateDashboardSpotlight() {
     try {
         const animes = await fetchDashboardAnimeSpotlight();
+
         if (!animes || !animes.length) return;
 
         spotlightAnimes = animes;
@@ -286,6 +292,9 @@ function fetchNewAnimes() {
                 carouselItem.appendChild(row);
                 newAnimesContainer.appendChild(carouselItem);
             }
+            if (typeof lazyLoadInstance !== 'undefined' && typeof lazyLoadInstance.update === 'function') {
+                lazyLoadInstance.update();
+            }
         })
         .catch(error => console.error('Error fetching new animes:', error));
 }
@@ -319,6 +328,9 @@ function fetchUpcomingAnimes() {
 
                 carouselItem.appendChild(row);
                 upcomingAnimesContainer.appendChild(carouselItem);
+            }
+            if (typeof lazyLoadInstance !== 'undefined' && typeof lazyLoadInstance.update === 'function') {
+                lazyLoadInstance.update();
             }
         })
         .catch(error => console.error('Error fetching upcoming animes:', error));
@@ -360,6 +372,10 @@ function fetchRecommendedAnimes() {
                     1100: { slidesPerView: 3 }    // Desktops
                 }
             });
+
+            if (typeof lazyLoadInstance !== 'undefined' && typeof lazyLoadInstance.update === 'function') {
+                lazyLoadInstance.update();
+            }
         })
         .catch(error => {
             console.error('Error fetching featured animes:', error);
@@ -396,6 +412,10 @@ function fetchMostwatchlistAnimes() {
                 slide.appendChild(row);
                 carouselInner.appendChild(slide);
             }
+
+            if (typeof lazyLoadInstance !== 'undefined' && typeof lazyLoadInstance.update === 'function') {
+                lazyLoadInstance.update();
+            }
         })
         .catch(error => {
             console.error('Error fetching most watchlisted animes:', error);
@@ -417,6 +437,10 @@ function fetchRandomAnimes() {
                 const animeCard = createRandomAnimeCard(anime);
                 randomAnimesContainer.appendChild(animeCard);
             });
+
+            if (typeof lazyLoadInstance !== 'undefined' && typeof lazyLoadInstance.update === 'function') {
+                lazyLoadInstance.update();
+            }
         })
         .catch(error => {
             console.error('Error fetching random animes:', error);
