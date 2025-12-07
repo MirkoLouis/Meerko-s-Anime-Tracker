@@ -10,16 +10,11 @@ CREATE INDEX idx_studio_name ON Studio(studio_name);
 CREATE INDEX idx_tag_name ON Tags(tag);
 
 -- Indexes for the `Watchlist` table
-CREATE INDEX idx_watchlist_user ON Watchlist(UserID);
 CREATE UNIQUE INDEX idx_watchlist_user_anime ON Watchlist(UserID, AnimeID);
 
 -- Index for the `comments` table
-CREATE INDEX idx_comments_anime ON comments(AnimeID);
 
 -- Indexes for the `user` table
-CREATE UNIQUE INDEX idx_user_username ON user(username);
-CREATE UNIQUE INDEX idx_user_email ON user(email);
-CREATE UNIQUE INDEX idx_user_display_name ON user(display_name);
 
 -- Composite index for the junction table `Anime_Tags`
 -- This helps in finding all tags for an anime or all animes for a tag efficiently.

@@ -41,4 +41,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     console.log("DOM Fully Loaded");
+
+    // Delegated event listener for all "Add to Watchlist" buttons
+    document.addEventListener('click', function(event) {
+        // Find the closest parent button with the target class
+        const watchlistBtn = event.target.closest('.add-watchlist-button-hover');
+
+        if (watchlistBtn) {
+            event.preventDefault(); // Prevent default anchor behavior
+            const animeId = watchlistBtn.dataset.animeId;
+            if (animeId && typeof addToWatchlist === 'function') {
+                addToWatchlist(animeId);
+            }
+        }
+    });
 });

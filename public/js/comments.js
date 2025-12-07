@@ -175,7 +175,7 @@ async function fetchAnimeDetails(currentUser) {
             
             const addToWatchlistBtn = document.getElementById('add-to-watchlist-btn');
             if (addToWatchlistBtn) {
-                addToWatchlistBtn.onclick = () => addToWatchlist(anime.AnimeID);
+                addToWatchlistBtn.dataset.animeId = anime.AnimeID;
             }
 
             console.log('Anime details populated successfully.');
