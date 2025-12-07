@@ -1,11 +1,12 @@
-// Initialize LazyLoad globally
+// Initializes the Vanilla LazyLoad library globally for all images with the '.lazy' class.
 const lazyLoadInstance = new LazyLoad({
     elements_selector: ".lazy"
 });
 
+// Executes scripts once the DOM is fully loaded to ensure all elements are available.
 document.addEventListener('DOMContentLoaded', () => {
-    // Sticky Navbar
-    // Adds a 'sticky' class to the navbar when the user scrolls down.
+    // Adds a 'sticky' class to the navbar when the page is scrolled more than 50 pixels,
+    // and removes it when scrolled back to the top.
     const navbar = document.querySelector('.navbar');
     if (navbar) {
         window.addEventListener('scroll', () => {
@@ -17,8 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Search on focus
-    // Triggers a search the first time the search input is focused.
+    // Triggers an initial search the first time the user focuses on the search input field.
     let hasSearchedOnFocus = false;
     const searchInput = document.getElementById('search-input');
     if (searchInput) {
@@ -30,15 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Randomize button event listener
-    // Attaches a click event to the randomize button.
+    // Attaches a click event listener to the 'randomize' button to fetch new random animes.
     const randomizeBtn = document.getElementById('randomizeBtn');
     if (randomizeBtn && typeof fetchRandomAnimes === 'function') {
         randomizeBtn.addEventListener('click', fetchRandomAnimes); // Assumes fetchRandomAnimes is globally available
     }
 
-    // Theme toggle functionality
-    // Toggles the 'dark-theme' class and saves the preference to local storage.
+    // Handles the theme toggle functionality, switching between light and dark themes
+    // and saving the user's preference in local storage.
     const toggleBtn = document.getElementById('theme-toggle');
     if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
@@ -47,12 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Load saved theme from local storage
+    // Checks local storage on page load and applies the dark theme if it was previously selected.
     if (localStorage.getItem('theme') === 'dark') {
         document.documentElement.classList.add('dark-theme');
     }
 
-    // Search form submission
+    // Attaches a submit event listener to the main search form to handle search queries.
     const searchForm = document.getElementById('search-form');
     if (searchForm && typeof handleSearch === 'function') {
         searchForm.addEventListener('submit', (event) => {
@@ -60,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Logout form submission
+    // Adds a confirmation prompt to the logout form before submitting.
     const logoutForm = document.querySelector('form[action="/auth/logout"]');
     if (logoutForm) {
         logoutForm.addEventListener('submit', (event) => {

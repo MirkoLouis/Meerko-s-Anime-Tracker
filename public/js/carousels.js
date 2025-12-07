@@ -546,8 +546,7 @@ function createUpcomingAnimeCard(anime) {
 
     const img = document.createElement('img');
     img.className = 'd-block w-100 lazy';
-    img.setAttribute('data-src', anime.image_url);
-    img.src = '/imnota-cat-fubuki.gif';
+    img.src = anime.image_url || '/imnota-cat-fubuki.gif';
     img.alt = anime.title + ' cover';
     img.style.objectFit = 'cover';
     img.style.height = '300px';

@@ -1,5 +1,7 @@
+// Executes scripts once the DOM is fully loaded to ensure all elements are available.
 document.addEventListener("DOMContentLoaded", () => {
-    // Temporarily disable watchlist buttons after a click to prevent multiple rapid submissions.
+    // Selects watchlist-related buttons and adds a click event listener to prevent rapid, duplicate submissions.
+    // When a button is clicked, it's disabled for 500ms.
     const buttonSelectors = [
         "#myListBtn",
         "#myCompletedAnimesBtn"

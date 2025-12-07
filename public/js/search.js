@@ -195,12 +195,22 @@ function handleSearch(event, page = 1) {
 // Allows users to visualize their active tag filters and remove them individually.
 function renderSelectedTags() {
     const container = document.getElementById('selected-tags-container');
-    container.innerHTML = selectedTags.map(tag => `
-        <span class="badge bg-primary me-2 mb-2">
-            ${tag}
-            <button type="button" class="btn-close btn-close-white btn-sm ms-1" aria-label="Remove" onclick="removeTag('${tag}')"></button>
-        </span>
-    `).join('');
+    container.innerHTML = ''; // Clear existing tags
+
+    selectedTags.forEach(tag => {
+        const badge = document.createElement('span');
+        badge.className = 'badge bg-primary me-2 mb-2';
+        badge.textContent = tag;
+
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'btn-close btn-close-white btn-sm ms-1';
+        removeButton.setAttribute('aria-label', 'Remove');
+        removeButton.addEventListener('click', () => removeTag(tag));
+
+        badge.appendChild(removeButton);
+        container.appendChild(badge);
+    });
 }
 
 // Helper Function for removing tags
@@ -215,37 +225,86 @@ function removeTag(tag) {
 // Dynamically creates "Prev", "Next", and page number inputs based on the total number of results.
 function renderPagination(total, currentPage, query) {
     const totalPages = Math.ceil(total / 51);
-    const paginationHTML = [];
+    if (totalPages <= 1) {
+        // Clear existing pagination if it's no longer needed
+        document.getElementById('pagination-top').innerHTML = '';
+        document.getElementById('pagination-bottom').innerHTML = '';
+        return;
+    }
 
-    if (totalPages <= 1) return;
+    const createPaginationControls = () => {
+        const nav = document.createElement('nav');
+        const ul = document.createElement('ul');
+        ul.className = 'pagination justify-content-center';
 
-    paginationHTML.push(`<nav><ul class="pagination justify-content-center">`);
+        // Previous Button
+        const prevLi = document.createElement('li');
+        prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+        const prevButton = document.createElement('button');
+        prevButton.className = 'page-link';
+        prevButton.textContent = 'Prev';
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                handleSearch(null, currentPage - 1);
+            }
+        });
+        prevLi.appendChild(prevButton);
+        ul.appendChild(prevLi);
 
-    paginationHTML.push(`
-        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-            <button class="page-link" onclick="handleSearch(null, ${currentPage - 1})">Prev</button>
-        </li>
-    `);
+        // Page Number Input
+        const inputLi = document.createElement('li');
+        inputLi.className = 'page-item';
+        const pageInput = document.createElement('input');
+        pageInput.type = 'number';
+        pageInput.className = 'form-control';
+        pageInput.value = currentPage;
+        pageInput.min = '1';
+        pageInput.max = totalPages;
+        pageInput.addEventListener('change', (e) => {
+            const newPage = parseInt(e.target.value, 10);
+            if (newPage >= 1 && newPage <= totalPages) {
+                handleSearch(null, newPage);
+            } else {
+                // Reset to current page if input is invalid
+                e.target.value = currentPage;
+            }
+        });
+        inputLi.appendChild(pageInput);
+        ul.appendChild(inputLi);
 
-    paginationHTML.push(`
-        <li class="page-item">
-            <input type="number" class="form-control" value="${currentPage}" 
-                min="1" max="${totalPages}" 
-                onchange="handleSearch(null, this.value)">
-        </li>
-        <li class="page-item">
-            <span class="page-link">/ ${totalPages}</span>
-        </li>
-    `);
+        // Total Pages Display
+        const totalLi = document.createElement('li');
+        totalLi.className = 'page-item';
+        const totalSpan = document.createElement('span');
+        totalSpan.className = 'page-link';
+        totalSpan.textContent = `/ ${totalPages}`;
+        totalLi.appendChild(totalSpan);
+        ul.appendChild(totalLi);
 
-    paginationHTML.push(`
-        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-            <button class="page-link" onclick="handleSearch(null, ${currentPage + 1})">Next</button>
-        </li>
-    `);
+        // Next Button
+        const nextLi = document.createElement('li');
+        nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+        const nextButton = document.createElement('button');
+        nextButton.className = 'page-link';
+        nextButton.textContent = 'Next';
+        nextButton.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                handleSearch(null, currentPage + 1);
+            }
+        });
+        nextLi.appendChild(nextButton);
+        ul.appendChild(nextLi);
 
-    paginationHTML.push(`</ul></nav>`);
+        nav.appendChild(ul);
+        return nav;
+    };
 
-    document.getElementById('pagination-top').innerHTML = paginationHTML.join('');
-    document.getElementById('pagination-bottom').innerHTML = paginationHTML.join('');
+    const paginationTop = document.getElementById('pagination-top');
+    const paginationBottom = document.getElementById('pagination-bottom');
+
+    paginationTop.innerHTML = '';
+    paginationBottom.innerHTML = '';
+
+    paginationTop.appendChild(createPaginationControls());
+    paginationBottom.appendChild(createPaginationControls());
 }
