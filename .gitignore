@@ -29,3 +29,4 @@ logs
 *.sw?
 .idea/
 .vscode/
+SYSTEM_DESIGN.md
