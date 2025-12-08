@@ -50,7 +50,7 @@ async function fetchAndRenderComments(animeId, currentUser) {
                     const deleteButton = document.createElement('button');
                     deleteButton.className = 'btn btn-danger btn-md';
                     deleteButton.textContent = 'Delete';
-                    deleteButton.onclick = () => deleteComment(comment.CommentID, animeId);
+                    deleteButton.addEventListener('click', () => deleteComment(comment.CommentID, animeId));
 
                     deleteButtonWrapper.appendChild(deleteButton);
                     commentContainer.appendChild(deleteButtonWrapper);

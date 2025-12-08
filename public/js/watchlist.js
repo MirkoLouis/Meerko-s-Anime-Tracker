@@ -89,22 +89,30 @@ function createWatchlistCard(anime, cardType = 'watchlist') {
 
     const inputGroup = document.createElement('div');
     inputGroup.className = 'input-group mb-2';
-    inputGroup.innerHTML = `
-        <select class="form-select" id="status-select-${anime.AnimeID}">
-            <option value="Watching" ${anime.watchlist_status === 'Watching' ? 'selected' : ''}>Watching</option>
-            <option value="Completed" ${anime.watchlist_status === 'Completed' ? 'selected' : ''}>Completed</option>
-            <option value="Plan to Watch" ${anime.watchlist_status === 'Plan to Watch' ? 'selected' : ''}>Plan to Watch</option>
-        </select>
-        <button class="btn btn-primary" onclick="updateStatus(${anime.AnimeID})">Save</button>
-    `; // SAFE (no user input)
+    const select = document.createElement('select');
+    select.className = 'form-select';
+    select.id = `status-select-${anime.AnimeID}`;
+    select.innerHTML = `
+        <option value="Watching" ${anime.watchlist_status === 'Watching' ? 'selected' : ''}>Watching</option>
+        <option value="Completed" ${anime.watchlist_status === 'Completed' ? 'selected' : ''}>Completed</option>
+        <option value="Plan to Watch" ${anime.watchlist_status === 'Plan to Watch' ? 'selected' : ''}>Plan to Watch</option>
+    `;
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'btn btn-primary';
+    saveBtn.textContent = 'Save';
+    saveBtn.addEventListener('click', () => updateStatus(anime.AnimeID));
+    inputGroup.appendChild(select);
+    inputGroup.appendChild(saveBtn);
+
 
     const buttonGroup = document.createElement('div');
     buttonGroup.className = 'd-flex align-items-center gap-2 mb-1';
     
     const removeBtn = document.createElement('button');
     removeBtn.className = 'btn btn-outline-danger btn-sm';
-    removeBtn.onclick = () => removeFromWatchlist(anime.AnimeID);
     removeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill mb-1" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/></svg> Remove`;
+    removeBtn.addEventListener('click', () => removeFromWatchlist(anime.AnimeID));
+
 
     const detailsBtn = document.createElement('a');
     detailsBtn.href = `/anime/${anime.AnimeID}`;
