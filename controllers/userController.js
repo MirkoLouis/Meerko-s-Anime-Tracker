@@ -33,9 +33,9 @@ const getUserSpotlight = async (req, res) => {
                      WHERE at2.AnimeID = a.AnimeID
                     ) AS genres,
                     COUNT(w.WatchlistID) AS watchlist_count
-                FROM Anime a
-                JOIN Studio s ON a.StudioID = s.StudioID
-                JOIN Watchlist w ON a.AnimeID = w.AnimeID
+                FROM anime a
+                JOIN studio s ON a.StudioID = s.StudioID
+                JOIN watchlist w ON a.AnimeID = w.AnimeID
                 WHERE a.rating >= 8
                 GROUP BY a.AnimeID
                 ORDER BY watchlist_count DESC
@@ -122,9 +122,9 @@ const getUserSpotlight = async (req, res) => {
                         WHERE at2.AnimeID = a.AnimeID
                     ) AS genres,
                     COUNT(w.WatchlistID) AS watchlist_count
-                FROM Anime a
-                JOIN Studio s ON a.StudioID = s.StudioID
-                JOIN Watchlist w ON a.AnimeID = w.AnimeID
+                FROM anime a
+                JOIN studio s ON a.StudioID = s.StudioID
+                JOIN watchlist w ON a.AnimeID = w.AnimeID
                 WHERE a.rating >= 8
                 GROUP BY a.AnimeID
                 ORDER BY watchlist_count DESC
@@ -243,7 +243,7 @@ const addToWatchlist = async (req, res) => {
     }
 
     try {
-        const query = 'SELECT 1 FROM Watchlist WHERE UserID = ? AND AnimeID = ? LIMIT 1';
+        const query = 'SELECT 1 FROM watchlist WHERE UserID = ? AND AnimeID = ? LIMIT 1';
         const [rows] = await db.query(query, [userId, animeId]);
 
         if (rows.length > 0) {
@@ -251,7 +251,7 @@ const addToWatchlist = async (req, res) => {
         }
 
         const insertQuery = `
-            INSERT INTO Watchlist (UserID, AnimeID, status, last_updated)
+            INSERT INTO watchlist (UserID, AnimeID, status, last_updated)
             VALUES (?, ?, ?, CURRENT_TIMESTAMP)
         `;
         await db.query(insertQuery, [userId, animeId, status]);
@@ -278,13 +278,13 @@ const updateWatchlistStatus = async (req, res) => {
     }
   
     const sql = `
-        UPDATE Watchlist
+        UPDATE watchlist
         SET status = ?, last_updated = CURRENT_TIMESTAMP
         WHERE UserID = ? AND AnimeID = ?
     `;
     try {
         const [result] = await db.query(
-                `UPDATE Watchlist
+                `UPDATE watchlist
                 SET status = ?, last_updated = CURRENT_TIMESTAMP
                 WHERE UserID = ? AND AnimeID = ?`,
             [status, userId, animeId]

@@ -8,10 +8,10 @@ const getFocusAnime = async (req, res) => {
             a.airing_end, a.rating, a.synopsis, a.image_url,
             s.studio_name, s.rating AS studio_rating,
             GROUP_CONCAT(DISTINCT t.tag ORDER BY t.tag SEPARATOR ', ') AS genres
-        FROM Anime a
-        JOIN Studio s ON a.StudioID = s.StudioID
-        LEFT JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
-        LEFT JOIN Tags t ON at.TagID = t.TagID
+        FROM anime a
+        JOIN studio s ON a.StudioID = s.StudioID
+        LEFT JOIN anime_tags at ON a.AnimeID = at.AnimeID
+        LEFT JOIN tags t ON at.TagID = t.TagID
         WHERE a.AnimeID = ?;
     `;
 
@@ -60,20 +60,20 @@ const searchAnime = async (req, res) => {
                 a.airing_end, a.rating, a.synopsis, a.image_url,
                 s.studio_name, s.rating AS studio_rating, 
                 GROUP_CONCAT(DISTINCT t2.tag ORDER BY t2.tag SEPARATOR ', ') AS genres
-            FROM Anime a
-            JOIN Studio s ON a.StudioID = s.StudioID
+            FROM anime a
+            JOIN studio s ON a.StudioID = s.StudioID
             ${tags.length ? `
             JOIN (
                 SELECT at.AnimeID
-                FROM Anime_Tags at
-                JOIN Tags t ON at.TagID = t.TagID
+                FROM anime_tags at
+                JOIN tags t ON at.TagID = t.TagID
                 WHERE t.tag IN (${tags.map(() => '?').join(',')})
                 GROUP BY at.AnimeID
                 HAVING COUNT(DISTINCT t.tag) = ?
             ) filtered_anime ON a.AnimeID = filtered_anime.AnimeID
             ` : ''}
-            JOIN Anime_Tags at2 ON a.AnimeID = at2.AnimeID
-            JOIN Tags t2 ON at2.TagID = t2.TagID
+            JOIN anime_tags at2 ON a.AnimeID = at2.AnimeID
+            JOIN tags t2 ON at2.TagID = t2.TagID
             ${whereSQL}
             GROUP BY a.AnimeID
             ORDER BY a.title ASC
@@ -85,13 +85,13 @@ const searchAnime = async (req, res) => {
         // Count all animes for proper pagination
         const [[{ count }]] = await db.query(`
             SELECT COUNT(DISTINCT a.AnimeID) as count
-            FROM Anime a
-            JOIN Studio s ON a.StudioID = s.StudioID
+            FROM anime a
+            JOIN studio s ON a.StudioID = s.StudioID
             ${tags.length ? `
             JOIN (
                 SELECT at.AnimeID
-                FROM Anime_Tags at
-                JOIN Tags t ON at.TagID = t.TagID
+                FROM anime_tags at
+                JOIN tags t ON at.TagID = t.TagID
                 WHERE t.tag IN (${tags.map(() => '?').join(',')})
                 GROUP BY at.AnimeID
                 HAVING COUNT(DISTINCT t.tag) = ?
@@ -130,10 +130,10 @@ const getAnimeSpotlight = async (req, res) => {
             s.studio_name,
             s.rating AS studio_rating,
             GROUP_CONCAT(t.tag ORDER BY t.tag SEPARATOR ', ') AS genres
-        FROM Anime a
-        JOIN Studio s ON a.StudioID = s.StudioID
-        JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
-        JOIN Tags t ON at.TagID = t.TagID
+        FROM anime a
+        JOIN studio s ON a.StudioID = s.StudioID
+        JOIN anime_tags at ON a.AnimeID = at.AnimeID
+        JOIN tags t ON at.TagID = t.TagID
         WHERE a.rating >= 10
         GROUP BY a.AnimeID
         ORDER BY a.title ASC
@@ -166,10 +166,10 @@ const getNewAnimes = async (req, res) => {
             s.studio_name,
             s.rating AS studio_rating,
             GROUP_CONCAT(t.tag ORDER BY t.tag SEPARATOR ', ') AS genres
-        FROM Anime a
-        JOIN Studio s ON a.StudioID = s.StudioID
-        JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
-        JOIN Tags t ON at.TagID = t.TagID
+        FROM anime a
+        JOIN studio s ON a.StudioID = s.StudioID
+        JOIN anime_tags at ON a.AnimeID = at.AnimeID
+        JOIN tags t ON at.TagID = t.TagID
         WHERE a.status = 'Airing'
         GROUP BY a.AnimeID
         ORDER BY a.airing_start DESC
@@ -201,10 +201,10 @@ const getUpcomingAnimes = async (req, res) => {
             s.studio_name,
             s.rating AS studio_rating,
             GROUP_CONCAT(t.tag ORDER BY t.tag SEPARATOR ', ') AS genres
-        FROM Anime a
-        JOIN Studio s ON a.StudioID = s.StudioID
-        JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
-        JOIN Tags t ON at.TagID = t.TagID
+        FROM anime a
+        JOIN studio s ON a.StudioID = s.StudioID
+        JOIN anime_tags at ON a.AnimeID = at.AnimeID
+        JOIN tags t ON at.TagID = t.TagID
         WHERE a.status = 'Upcoming'
         GROUP BY a.AnimeID
         ORDER BY a.airing_start DESC
@@ -236,10 +236,10 @@ const getRecommendedAnimes = async (req, res) => {
             s.studio_name,
             s.rating AS studio_rating,
             GROUP_CONCAT(t.tag ORDER BY t.tag SEPARATOR ', ') AS genres
-        FROM Anime a
-        JOIN Studio s ON a.StudioID = s.StudioID
-        JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
-        JOIN Tags t ON at.TagID = t.TagID
+        FROM anime a
+        JOIN studio s ON a.StudioID = s.StudioID
+        JOIN anime_tags at ON a.AnimeID = at.AnimeID
+        JOIN tags t ON at.TagID = t.TagID
         WHERE a.rating IN ('8','9')
         GROUP BY a.AnimeID
         ORDER BY a.rating DESC
@@ -272,10 +272,10 @@ const getRandomAnimes = async (req, res) => {
             s.studio_name,
             s.rating AS studio_rating,
             GROUP_CONCAT(t.tag ORDER BY t.tag SEPARATOR ', ') AS genres
-        FROM Anime a
-        JOIN Studio s ON a.StudioID = s.StudioID
-        JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
-        JOIN Tags t ON at.TagID = t.TagID
+        FROM anime a
+        JOIN studio s ON a.StudioID = s.StudioID
+        JOIN anime_tags at ON a.AnimeID = at.AnimeID
+        JOIN tags t ON at.TagID = t.TagID
         GROUP BY a.AnimeID
         ORDER BY RAND()
         LIMIT 5;
@@ -306,10 +306,10 @@ const getAllAnimes = async (req, res) => {
             s.studio_name,
             s.rating AS studio_rating,
             GROUP_CONCAT(t.tag ORDER BY t.tag SEPARATOR ', ') AS genres
-        FROM Anime a
-        JOIN Studio s ON a.StudioID = s.StudioID
-        JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
-        JOIN Tags t ON at.TagID = t.TagID
+        FROM anime a
+        JOIN studio s ON a.StudioID = s.StudioID
+        JOIN anime_tags at ON a.AnimeID = at.AnimeID
+        JOIN tags t ON at.TagID = t.TagID
         GROUP BY a.AnimeID
         ORDER BY a.title ASC
         ;
@@ -326,7 +326,7 @@ const getAllAnimes = async (req, res) => {
 
 const getAllTags = async (req, res) => {
     const query = `
-        SELECT DISTINCT tag FROM Tags ORDER BY tag
+        SELECT DISTINCT tag FROM tags ORDER BY tag
         ;
     `;
 
@@ -356,11 +356,11 @@ const getMostWatchlistedAnimes = async (req, res) => {
             s.rating AS studio_rating,
             GROUP_CONCAT(t.tag ORDER BY t.tag SEPARATOR ', ') AS genres,
             COUNT(w.WatchlistID) AS watchlist_count
-        FROM Anime a
-        JOIN Studio s ON a.StudioID = s.StudioID
-        JOIN Watchlist w ON a.AnimeID = w.AnimeID
-        JOIN Anime_Tags at ON a.AnimeID = at.AnimeID
-        JOIN Tags t ON at.TagID = t.TagID
+        FROM anime a
+        JOIN studio s ON a.StudioID = s.StudioID
+        JOIN watchlist w ON a.AnimeID = w.AnimeID
+        JOIN anime_tags at ON a.AnimeID = at.AnimeID
+        JOIN tags t ON at.TagID = t.TagID
         GROUP BY a.AnimeID
         ORDER BY watchlist_count DESC
         LIMIT 30;

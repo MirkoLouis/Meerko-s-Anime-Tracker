@@ -1,5 +1,5 @@
 -- Insert statements for anime tags/genres
-INSERT INTO Tags (tag)
+INSERT INTO tags (tag)
 VALUES
 ('Action'),
 ('Adventure'),

@@ -95,7 +95,7 @@ async def main():
 
     print("💾 Writing SQL insert statements...")
     with open("insert_studios.sql", "w", encoding="utf-8") as sql_file:
-        sql_file.write("INSERT INTO Studio (studio_name, rating) VALUES\n")
+        sql_file.write("INSERT INTO studio (studio_name, rating) VALUES\n")
         values = []
         
         def calculate_rating(freq):

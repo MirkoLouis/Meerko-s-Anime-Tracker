@@ -264,12 +264,12 @@ async def main():
         f.write("START TRANSACTION;\n")
         curr_id = 1
         for val in anime_insert_values:
-            f.write(f"INSERT INTO Anime (title, type, episodes, status, airing_start, airing_end, rating, synopsis, StudioID, image_url) VALUES {val};\n")
+            f.write(f"INSERT INTO anime (title, type, episodes, status, airing_start, airing_end, rating, synopsis, StudioID, image_url) VALUES {val};\n")
             f.write(f"SET @anime_id_{curr_id} = LAST_INSERT_ID();\n")
             curr_id += 1
 
         if anime_tags_insert_values:
-            f.write("\nINSERT INTO Anime_Tags (AnimeID, TagID) VALUES\n")
+            f.write("\nINSERT INTO anime_tags (AnimeID, TagID) VALUES\n")
             f.write(",\n".join(anime_tags_insert_values) + ";\n")
 
         f.write("COMMIT;\n")

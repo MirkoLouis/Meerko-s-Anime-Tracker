@@ -1,4 +1,4 @@
-INSERT INTO Studio (studio_name, rating) VALUES
+INSERT INTO studio (studio_name, rating) VALUES
 ('100studio', 4),
 ('10Gauge', 4),
 ('1IN', 2),

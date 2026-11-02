@@ -13,7 +13,7 @@ if response.status_code == 200:
 
     # Start building SQL
     sql_lines = ["-- Insert statements for anime tags/genres"]
-    sql_lines.append("INSERT INTO Tags (tag)")
+    sql_lines.append("INSERT INTO tags (tag)")
     sql_lines.append("VALUES")
 
     values = []
