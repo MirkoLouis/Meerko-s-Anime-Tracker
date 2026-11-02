@@ -12,6 +12,7 @@ lerna-debug.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.venv/
 
 # Logs
 *.log
@@ -29,5 +30,3 @@ logs
 *.sw?
 .idea/
 .vscode/
-SYSTEM_DESIGN.md
-speaker_notes.md
