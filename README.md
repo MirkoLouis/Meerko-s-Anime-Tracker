@@ -78,37 +78,50 @@ This data flow allows for a responsive and interactive user experience, as the p
 3.  **Create a `.env` file:**
     Create a `.env` file in the root directory and add the following environment variables:
     ```
-    HOST=your_database_host
-    USER=your_database_user
-    PASSWORD=your_database_password
-    DATABASE=your_database_name
+    DB_HOST=localhost
+    DB_USER=your_database_user
+    DB_PASSWORD=your_database_password
+    DB_NAME=anime_tracker
     JWT_SECRET=your_jwt_secret
     JWT_EXPIRES_IN=90d
     JWT_COOKIE_EXPIRES=90
     ```
+    **Note:** The database variables are prefixed with `DB_` because `USER` and `HOST` are usually already set by the shell on Linux/macOS, and `dotenv` does not override existing environment variables. `DB_NAME` must be `anime_tracker`, since `database_creation.sql` creates that database by name.
+
 4.  **Set up the database:**
     You have two main paths to set up and populate the database:
 
-    #### Path A: Manual SQL Execution (Recommended for most users)
+    #### Path A: Automated Setup (Recommended)
 
-    This path is for users who want to use the pre-generated SQL files to populate the database.
+    Runs the schema and all pre-generated seed files in the correct order, using the connection settings from `.env`:
+    ```bash
+    npm run db:setup
+    ```
+    The script shows the target host, user and database and asks for confirmation before it **drops and recreates** `anime_tracker`. It stops at the first failing file and prints the MySQL error, and prints row counts per table on success. To skip the optional sample watchlists and comments:
+    ```bash
+    npm run db:setup -- --skip-optional
+    ```
+
+    #### Path A (manual fallback): Run the SQL files yourself
+
+    The insert files do not contain a `USE` statement, so always pass the database name explicitly or the data will go into whatever database your client defaults to.
 
     1.  **Create the database schema:**
         Run the following command to create the database and all the necessary tables.
         ```bash
-        mysql -u your_database_user -p your_database_name < "auto insert to db/database_creation.sql"
+        mysql -u your_database_user -p < "auto insert to db/database_creation.sql"
         ```
 
     2.  **Insert initial data:**
         Execute the following SQL files in order to populate the database with initial data for studios, tags, animes, users, and watchlists.
         ```bash
-        mysql -u your_database_user -p your_database_name < "auto insert to db/inserts_studios.sql"
-        mysql -u your_database_user -p your_database_name < "auto insert to db/insert_tags.sql"
-        mysql -u your_database_user -p your_database_name < "auto insert to db/anime_insert_15192.sql" 
-        mysql -u your_database_user -p your_database_name < "auto insert to db/update_spotlight_anime.sql"
-        mysql -u your_database_user -p your_database_name < "auto insert to db/insert_users.sql"
-        mysql -u your_database_user -p your_database_name < "auto insert to db/insert_watchlists.sql"
-        mysql -u your_database_user -p your_database_name < "auto insert to db/insert_comments.sql"
+        mysql -u your_database_user -p anime_tracker < "auto insert to db/insert_studios.sql"
+        mysql -u your_database_user -p anime_tracker < "auto insert to db/insert_tags.sql"
+        mysql -u your_database_user -p anime_tracker < "auto insert to db/anime_insert_15192.sql" 
+        mysql -u your_database_user -p anime_tracker < "auto insert to db/update_spotlight_anime.sql"
+        mysql -u your_database_user -p anime_tracker < "auto insert to db/insert_users.sql"
+        mysql -u your_database_user -p anime_tracker < "auto insert to db/insert_watchlists.sql"
+        mysql -u your_database_user -p anime_tracker < "auto insert to db/insert_comments.sql"
         ```
         **Note:**
         - `anime_insert_15192.sql` contains over 15,000 anime entries. For a smaller dataset, you can use `Dump20250513.sql` which contains around 1,000 animes, but be aware that it might not be up-to-date with the latest schema changes.
@@ -163,7 +176,7 @@ This data flow allows for a responsive and interactive user experience, as the p
         **Note:** This script can take around 20-30 minutes to finish, depending on the number of pages in the Jikan API.
 
     5.  **Execute the generated SQL files:**
-        After running the Python scripts, you will have a set of `.sql` files in the `auto insert to db` directory. You can then execute them as described in "Path A" to populate your database.
+        After running the Python scripts, you will have a set of `.sql` files in the `auto insert to db` directory. You can then execute them with `npm run db:setup` or as described in "Path A" to populate your database.
 
 5.  **Start the server:**
     ```bash

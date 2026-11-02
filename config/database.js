@@ -9,10 +9,12 @@ dotenv.config({ path: './.env'});
 function createDbConnection() {
     return mysql.createPool({
         connectionLimit: 50,
-        host: process.env.HOST,
-        user: process.env.USER,
-        password: process.env.PASSWORD,
-        database: process.env.DATABASE
+        // DB_-prefixed names avoid clashing with the shell's own USER/HOST variables,
+        // which dotenv would otherwise refuse to override.
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
     }).promise();
 }
 
