@@ -183,3 +183,10 @@ This data flow allows for a responsive and interactive user experience, as the p
     npm start
     ```
     The application will be running at `http://localhost:3000`.
+
+## Version history
+
+| Version | Where |
+|---|---|
+| Final (Node.js/Express web app) | this repository's `master` branch |
+| MySQL prototype (v0.0.1 to v3 SQL, Mar–Apr 2025) | tag [`mysql-prototype`](https://github.com/MirkoLouis/Meerko-s-Anime-Tracker/tree/mysql-prototype), with history imported from the archived MirkoLouis/Anime_tracker |
